@@ -1,7 +1,2 @@
+*
 
-.vs
-videoconf/bin
-videoconf/obj
-videoconf/scripts/build
-videoconf/wwwroot/scripts
-videoconf/Properties/launchSettings.json
