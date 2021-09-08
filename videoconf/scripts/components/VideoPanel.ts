@@ -14,6 +14,7 @@ export class VideoPanelProps {
     muteMyVideo: (mute: boolean) => void;
     muteMyAudio: (mute: boolean) => void;
     openPrivateChat: (jitsiId: string, name: string) => void;
+    kickParticipantOut: (jistId: string) => void;
     panelClass: string;
     fullscreenClass: string;
     popupMenuClass: string;
@@ -48,6 +49,7 @@ export class VideoPanel {
     videoMuteMenuItem: HTMLElement;
     fullscreenMuteItem: HTMLElement;
     tileIcon: HTMLElement;
+    kickParticipantMenuItem: HTMLElement;
 
     static nPanelInstanceId: number = 0;//increased when add new, but not decreased when remove panel
     Id: number;
@@ -79,7 +81,7 @@ export class VideoPanel {
         this.audioMuteMenuItem = $(`li.audio-mute`, this.root)[0] as HTMLElement;
         this.videoMuteMenuItem = $(`li.video-mute`, this.root)[0] as HTMLElement;
         this.fullscreenMuteItem = $(`li.fullscreen`, this.root)[0] as HTMLElement;
-
+        this.kickParticipantMenuItem = $(`li.kick-participant`, this.root)[0] as HTMLElement;
         //this.attachHandlers();
     }
 
@@ -180,14 +182,19 @@ export class VideoPanel {
             this.videoMuteMenuItem.style.display = userHaveCamera ? "flex" : "none";
             this.audioMuteMenuItem.style.display = userHaveMicrophone ? "flex" : "none";
             this.grantModeratorMenuItem.style.display = "flex";
+            this.kickParticipantMenuItem.style.display = "flex";
         } else {
             this.videoMuteMenuItem.style.display = "none";
             this.audioMuteMenuItem.style.display = "none";
             this.grantModeratorMenuItem.style.display = "none";
+            this.kickParticipantMenuItem.style.display = "none";
         }
 
-        if (jitsiUser.getProperty(UserProperty.IsHost))
+        if (jitsiUser.getProperty(UserProperty.IsHost)) {
             this.grantModeratorMenuItem.style.display = "none";
+            this.kickParticipantMenuItem.style.display = "none";
+        }
+            
 
         //popup menu audio icon/label change
         if (this.audioMuteMenuItem.style.display === 'flex') {
@@ -222,6 +229,9 @@ export class VideoPanel {
             });
             $(this.videoMuteMenuItem).unbind('click').on('click', () => {
                 this.props.muteUserVideo(jitsiUser.getId(), !jitsiUser.isVideoMuted());
+            });
+            $(this.kickParticipantMenuItem).unbind('click').on('click', () => {
+                this.props.kickParticipantOut(jitsiUser.getId());
             });
         }
 
@@ -268,6 +278,7 @@ export class VideoPanel {
         }
 
         this.grantModeratorMenuItem.style.display = "none";
+        this.kickParticipantMenuItem.style.display = "none";
 
         //popup menu audio icon/label change
         if (this.audioMuteMenuItem.style.display === 'flex') {
@@ -423,7 +434,7 @@ export class VideoPanel {
                             </span>
                             <span class="label overflow-menu-item-text">View full screen</span>
                         </li>
-                        <li aria-label="Private Chat" class="overflow-menu-item ${this.privateChatClass}">
+                        <li aria-label="" class="overflow-menu-item ${this.privateChatClass}">
                             <span class="overflow-menu-item-icon">
                                 <div class="jitsi-icon ">
                                     <svg fill="none" height="22" width="22" viewBox="0 0 22 22">
@@ -432,6 +443,16 @@ export class VideoPanel {
                                 </div>
                             </span>
                             <span class="label overflow-menu-item-text">Private chat</span>
+                        </li>
+                        <li aria-label="" class="overflow-menu-item kick-participant">
+                            <span class="overflow-menu-item-icon">
+                                <div class="jitsi-icon ">
+                                    <svg height="20" width="20" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 16.667a6.667 6.667 0 100-13.334 6.667 6.667 0 000 13.334zm0 1.666a8.333 8.333 0 110-16.666 8.333 8.333 0 010 16.666zm0-9.512l2.357-2.357a.833.833 0 111.179 1.179L11.179 10l2.357 2.357a.833.833 0 11-1.179 1.179L10 11.178l-2.357 2.357a.833.833 0 01-1.178-1.179L8.822 10 6.465 7.643a.833.833 0 111.178-1.179L10 8.821z"></path>
+                                    </svg>
+                                </div>
+                            </span>
+                            <span class="label overflow-menu-item-text">Kick out</span>
                         </li>
                     </ul>
                 </div>

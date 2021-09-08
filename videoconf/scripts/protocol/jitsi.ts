@@ -16,6 +16,9 @@ export enum JitsiCommand {
     FILE_META = "file_meta",
     FILE_SLICE = "file_slice",
     BIZ_ID = "biz_id",
+    KICK_OUT = "kick_out",
+    MUTE_All_AUDIO = "mute_all_audio",
+    MUTE_All_VIDEO = "mute_all_video",
 };
 
 

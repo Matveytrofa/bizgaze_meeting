@@ -5,6 +5,8 @@ import { VectorIcon } from "./vector_icon";
 
 export class ToolBarProps {
     toggleTileView: () => void;
+    toggleMuteAll: () => void;
+    toggleMuteAllVideo: () => void;
     toggleVideoMute: () => void;
     toggleAudioMute: () => void;
     toggleScreenShare: () => void;
@@ -18,9 +20,12 @@ export class ToolBarProps {
 export class ToolBar {
     root: HTMLElement = null;
     toolbarTileViewButtonElement: HTMLElement;
+    toolbarMuteAllButtonElement: HTMLElement;
+    toolbarMuteAllVideoButtonElement: HTMLElement;
     toolbarAudioButtonElement: HTMLElement;
     toolbarVideoButtonElement: HTMLElement;
     toolbarDesktopShareButtonElement: HTMLElement;
+    toolbarDesktopShareMenuButtonElement: HTMLElement;
     toolbarRecordButtonElement: HTMLElement;
     toolbarHandRaiseButtonElement: HTMLElement;
     toolbarChatButtonElement: HTMLElement;
@@ -35,15 +40,19 @@ export class ToolBar {
         
         this.root = document.getElementById("new-toolbox");
         this.toolbarTileViewButtonElement = document.querySelector("#tileview");
+        this.toolbarMuteAllButtonElement = document.querySelector("#muteall");
+        this.toolbarMuteAllVideoButtonElement = document.querySelector("#muteallvideo");
         this.toolbarAudioButtonElement = document.querySelector("#mic-enable");
         this.toolbarVideoButtonElement = document.querySelector("#camera-enable");
         this.toolbarDesktopShareButtonElement = document.querySelector("#share");
+        this.toolbarDesktopShareMenuButtonElement = document.querySelector("#sharescreen");
         this.toolbarRecordButtonElement = document.querySelector("#record");
         this.toolbarHandRaiseButtonElement = document.querySelector("#handraise");
         this.toolbarChatButtonElement = document.querySelector("#chat");
         this.toolbarLeaveButtonElement = document.querySelector("#leave");
         this.toolbarSettingButtonElement = document.querySelector("#setting");
         this.chattingUnreadBadge = document.querySelector(".chat-badge");
+
 
         this.attachHandlers();
     }
@@ -52,6 +61,15 @@ export class ToolBar {
         $(this.toolbarTileViewButtonElement).on('click', () => {
             this.props.toggleTileView();
         });
+
+        $(this.toolbarMuteAllButtonElement).on('click', () => {
+            this.props.toggleMuteAll();
+        });
+
+        $(this.toolbarMuteAllVideoButtonElement).on('click', () => {
+            this.props.toggleMuteAllVideo();
+        });
+
         $(this.toolbarVideoButtonElement).on('click', () => {
             this.props.toggleVideoMute();
         });
@@ -65,6 +83,10 @@ export class ToolBar {
         });
 
         $(this.toolbarDesktopShareButtonElement).on("click", () => {
+            this.props.toggleScreenShare();
+        });
+
+        $(this.toolbarDesktopShareMenuButtonElement).on("click", () => {
             this.props.toggleScreenShare();
         });
 
@@ -159,5 +181,7 @@ export class ToolBar {
 
     updateByRole(isHost: boolean) {
         this.toolbarHandRaiseButtonElement.style.display = isHost ? "none" : "inline-block";
+        this.toolbarMuteAllButtonElement.style.display = !isHost ? "none" : "inline-block";
+        this.toolbarMuteAllVideoButtonElement.style.display = !isHost ? "none" : "inline-block";
     }
 }

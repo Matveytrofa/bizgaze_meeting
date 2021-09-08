@@ -92,8 +92,9 @@ export class BizGazeMeeting {
 
 
     //JitsiServerDomain = "idlests.com";
-    JitsiServerDomain = "unimail.in";
-    
+    //JitsiServerDomain = "unimail.in";
+    JitsiServerDomain = "meetserver.com";
+
     localTracks: JitsiTrack[] = [];
 
     screenSharing = false;
@@ -734,6 +735,15 @@ export class BizGazeMeeting {
             });
 
         //command
+        this.jitsiRoom.addCommandListener(JitsiCommand.KICK_OUT, (param: JitsiCommandParam) => {
+            this.onKickedOut(param)
+        });
+        this.jitsiRoom.addCommandListener(JitsiCommand.MUTE_All_AUDIO, (param: JitsiCommandParam) => {
+            this.onMuteAllAudio(param)
+        });
+        this.jitsiRoom.addCommandListener(JitsiCommand.MUTE_All_VIDEO, (param: JitsiCommandParam) => {
+            this.onMuteAllVideo(param)
+        });
         this.jitsiRoom.addCommandListener(JitsiCommand.GRANT_HOST_ROLE, (param: JitsiCommandParam) => {
             this.onChangedModerator(param)
         });
@@ -1101,6 +1111,19 @@ export class BizGazeMeeting {
      * **************************************************************************
      */
 
+    kickParticipantOut(targetId: string) {
+        this.Log("Sending kick out");
+        this.sendJitsiBroadcastCommand(JitsiCommand.KICK_OUT, targetId);
+    }
+
+    onKickedOut(param: JitsiCommandParam) {
+        this.Log("received kick out");
+        const targetId = param.value;
+
+        if (targetId === this.myInfo.Jitsi_Id) {
+            this.forceStop();
+        }
+    }
     //moderator
     grantModeratorRole(targetId: string) {
         this.Log("Sending grant host");
@@ -1192,6 +1215,7 @@ export class BizGazeMeeting {
     }
 
     public muteMyAudio(mute: boolean) {
+        console.log("--------------it's me-------------");
         this.getLocalTracks().forEach(track => {
             if (track.getType() === MediaType.AUDIO) {
                 if (mute) track.mute();
@@ -1894,7 +1918,63 @@ export class BizGazeMeeting {
 
         return new MediaStream(tracks);
     }
+    public async toggleMuteAllVideo() {
+        if (!this.myInfo.IsHost)
+            return;
 
+        this.sendJitsiBroadcastCommand(
+            JitsiCommand.MUTE_All_VIDEO,
+            this.myInfo.Jitsi_Id, { mute: true }
+        );
+        this.ui.notification_warning(
+            "Wait a second",
+            "Sent your all video disable request",
+            NotificationType.VideoMute
+        );
+    }
+    onMuteAllVideo(param: JitsiCommandParam) {
+        const senderId = param.value;
+        const senderName = param.attributes.senderName;
+        const mute = param.attributes.mute === "true";
+        if (senderId !== this.myInfo.Jitsi_Id) {
+            this.ui.askDialog(
+                senderName,
+                "Requested to mute your camera",
+                NotificationType.VideoMute,
+                this.muteMyVideo.bind(this),
+                null,
+                mute);
+        }
+    }
+    public async toggleMuteAll() {
+
+        if (!this.myInfo.IsHost)
+            return;
+
+        this.sendJitsiBroadcastCommand(
+            JitsiCommand.MUTE_All_AUDIO,
+            this.myInfo.Jitsi_Id, { mute: true });
+        this.ui.notification_warning(
+            "Wait a second",
+            "Sent your mute all request",
+            NotificationType.AudioMute
+        );
+        
+    }
+    onMuteAllAudio(param: JitsiCommandParam) {
+        const senderId = param.value;
+        const senderName = param.attributes.senderName;
+        const mute = param.attributes.mute === "true";
+        if (senderId !== this.myInfo.Jitsi_Id) {
+            this.ui.askDialog(
+                senderName,
+                "Requested to mute your microphone",
+                NotificationType.AudioMute,
+                this.muteMyAudio.bind(this),
+                null,
+                mute);
+        }
+    }
     // handraise
     public async toggleHandRaise() {
 
@@ -1910,6 +1990,7 @@ export class BizGazeMeeting {
             );
         }
     }
+
 
     onAskHandRaise(param: JitsiCommandParam) {
         if (!this.myInfo.IsHost)
@@ -1927,6 +2008,7 @@ export class BizGazeMeeting {
     }
 
     allowHandRaise(jitsiId: string) {
+        console.log(`----- allowhand------: ${jitsiId}`);
         this.sendJitsiPrivateCommand(jitsiId, JitsiPrivateCommand.ALLOW_HANDRAISE, { allow: true });
     }
     denyHandRaise(jitsiId: string) {

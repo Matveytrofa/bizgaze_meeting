@@ -68,6 +68,8 @@ export class MeetingUI {
         tProps.toggleScreenShare = this.meeting.toggleScreenShare.bind(this.meeting);
         tProps.toggleRecording = this.meeting.toggleRecording.bind(this.meeting);
         tProps.toggleHandRaise = this.meeting.toggleHandRaise.bind(this.meeting);
+        tProps.toggleMuteAll = this.meeting.toggleMuteAll.bind(this.meeting);
+        tProps.toggleMuteAllVideo = this.meeting.toggleMuteAllVideo.bind(this.meeting);
         tProps.openSetting = this.showSettingDialog.bind(this);
         tProps.leaveMeeting = this.meeting.stop.bind(this.meeting);
         this.toolbar = new ToolBar(tProps);
@@ -102,6 +104,7 @@ export class MeetingUI {
         //video grid
         const vProps = new VideoPanelGridProps();
         vProps.grantModeratorRole = this.meeting.grantModeratorRole.bind(this.meeting);
+        vProps.kickParticipantOut = this.meeting.kickParticipantOut.bind(this.meeting);
         vProps.muteMyAudio = this.meeting.muteMyAudio.bind(this.meeting);
         vProps.muteMyVideo = this.meeting.muteMyVideo.bind(this.meeting);
         vProps.muteUserAudio = this.meeting.muteUserAudio.bind(this.meeting);
