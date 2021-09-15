@@ -181,7 +181,7 @@ export class ToolBar {
 
     updateByRole(isHost: boolean) {
         this.toolbarHandRaiseButtonElement.style.display = isHost ? "none" : "inline-block";
-        this.toolbarMuteAllButtonElement.style.display = !isHost ? "none" : "inline-block";
-        this.toolbarMuteAllVideoButtonElement.style.display = !isHost ? "none" : "inline-block";
+        this.toolbarMuteAllButtonElement.style.display = !isHost ? "none" : "block";
+        this.toolbarMuteAllVideoButtonElement.style.display = !isHost ? "none" : "block";
     }
 }

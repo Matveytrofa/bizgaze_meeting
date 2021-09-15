@@ -66,7 +66,9 @@ export class Lobby {
 
     start() {
         const initOptions = {
-            disableAudioLevels: true
+            disableAudioLevels: true,
+            disableAEC: false,
+            disableNS: false
         };
 
         this.JitsiMeetJS.init(initOptions);

@@ -1198,6 +1198,7 @@ export class BizGazeMeeting {
 
         let audioMuted = false;
         this.getLocalTracks().forEach(track => {
+            console.log("--------------it's me-OnToggleMuteMyAudio------------");
             if (track.getType() === MediaType.AUDIO && track.isMuted()) audioMuted = true;
         });
         this.muteMyAudio(!audioMuted);
@@ -1215,8 +1216,9 @@ export class BizGazeMeeting {
     }
 
     public muteMyAudio(mute: boolean) {
-        console.log("--------------it's me-------------");
+        
         this.getLocalTracks().forEach(track => {
+            console.log("--------------it's me-muteMyAudio------------");
             if (track.getType() === MediaType.AUDIO) {
                 if (mute) track.mute();
                 else track.unmute();
@@ -2008,7 +2010,6 @@ export class BizGazeMeeting {
     }
 
     allowHandRaise(jitsiId: string) {
-        console.log(`----- allowhand------: ${jitsiId}`);
         this.sendJitsiPrivateCommand(jitsiId, JitsiPrivateCommand.ALLOW_HANDRAISE, { allow: true });
     }
     denyHandRaise(jitsiId: string) {

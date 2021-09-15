@@ -223,7 +223,6 @@ export class MeetingUI {
 
     public askDialog(title: string, message: string, icon: NotificationType,
         allowCallback: Function, denyCallback: Function, param: any) {
-        console.log("askdialog----------------------------");
         const props = new AskDialogProps();
         props.title = title;
         props.message = message;
