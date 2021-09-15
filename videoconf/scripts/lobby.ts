@@ -67,7 +67,7 @@ export class Lobby {
     start() {
         const initOptions = {
             disableAudioLevels: true,
-            disableAEC: false,
+            disableAEC: true,
             disableNS: false
         };
 
