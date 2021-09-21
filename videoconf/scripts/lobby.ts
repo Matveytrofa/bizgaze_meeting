@@ -66,9 +66,9 @@ export class Lobby {
 
     start() {
         const initOptions = {
-            disableAudioLevels: true,
-           // disableAEC: true,
-            //disableNS: false
+            //disableAudioLevels: true,
+            //disableAEC: false,
+            disableNS: false
         };
 
         this.JitsiMeetJS.init(initOptions);
@@ -151,11 +151,12 @@ export class Lobby {
         this.activeCameraDeviceId = this.cameraList.length > 0 ? this.cameraList[0].deviceId : null;
         this.activeMicDeviceId = this.micList.length > 0 ? this.micList[0].deviceId : null;
         this.activeSpeakerDeviceId = this.speakerList.length > 0 ? this.speakerList[0].deviceId : null;
-
+        /**/
         this.createLocalTracks(this.activeCameraDeviceId, this.activeMicDeviceId)
             .then((tracks: JitsiTrack[]) => {
                 this.initOnTracks(tracks);
             });
+            
     }
 
     initOnTracks(tracks: JitsiTrack[]) {
@@ -202,7 +203,7 @@ export class Lobby {
     }
 
     createLocalTracks(cameraDeviceId: string, micDeviceId: string): Promise<JitsiTrack[]> {
-
+        console.log("------createLocalTracks------------:"+cameraDeviceId+" ----------- "+micDeviceId);
         this.videoTrackError = null;
         this.audioTrackError = null;
 
@@ -212,8 +213,8 @@ export class Lobby {
                 cameraDeviceId,
                 micDeviceId
             }).catch(() => Promise.all([
-                this.createAudioTrack(micDeviceId).then(([stream]) => stream),
-                this.createVideoTrack(cameraDeviceId).then(([stream]) => stream)
+                //this.createAudioTrack(micDeviceId).then(([stream]) => stream),
+                //this.createVideoTrack(cameraDeviceId).then(([stream]) => stream)
             ])).then((tracks: JitsiTrack[]) => {
                 if (this.audioTrackError) {
                     //display error
