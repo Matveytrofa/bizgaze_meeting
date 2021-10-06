@@ -3,6 +3,7 @@
 export class VideoPanelGridProps {
     grantModeratorRole: (jistId: string) => void;
     kickParticipantOut: (jistId: string) => void;
+    sendRemoteControlReply: (type: string, e: any, jistId: string) => void;
     muteUserAudio: (jitsiId: string, mute: boolean) => void;
     muteUserVideo: (jitsiId: string, mute: boolean) => void;
     muteMyVideo: (mute: boolean) => void;
@@ -48,6 +49,7 @@ export class VideoPanelGrid {
         props.refreshGrid = this.redrawGrid.bind(this);
         props.grantModeratorRole = this.props.grantModeratorRole;
         props.kickParticipantOut = this.props.kickParticipantOut;
+        props.sendRemoteControlReply = this.props.sendRemoteControlReply;
         props.muteUserVideo = this.props.muteUserVideo;
         props.muteUserAudio = this.props.muteUserAudio;
         props.muteMyVideo = this.props.muteMyVideo;

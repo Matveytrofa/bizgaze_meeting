@@ -19,6 +19,7 @@ import { NotificationType } from "./enum/NotificationType";
 import { JitsiCommandQueue, JitsiPrivateCommandQueue } from "./jitsi/JitsiCommandQueue";
 import { FileMeta } from "./file/FileMeta";
 import { VideoPanel } from "./components/VideoPanel";
+import { log } from "node:console";
 
 declare global {
     interface Window {
@@ -55,7 +56,255 @@ declare var MediaRecorder: {
     new(): MediaRecorder;
     new(stream: MediaStream, options: object): MediaRecorder;
 };
+const KEYS = {
+    BACKSPACE: 'backspace',
+    DELETE: 'delete',
+    RETURN: 'enter',
+    TAB: 'tab',
+    ESCAPE: 'escape',
+    UP: 'up',
+    DOWN: 'down',
+    RIGHT: 'right',
+    LEFT: 'left',
+    HOME: 'home',
+    END: 'end',
+    PAGEUP: 'pageup',
+    PAGEDOWN: 'pagedown',
 
+    F1: 'f1',
+    F2: 'f2',
+    F3: 'f3',
+    F4: 'f4',
+    F5: 'f5',
+    F6: 'f6',
+    F7: 'f7',
+    F8: 'f8',
+    F9: 'f9',
+    F10: 'f10',
+    F11: 'f11',
+    F12: 'f12',
+    META: 'command',
+    CMD_L: 'command',
+    CMD_R: 'command',
+    ALT: 'alt',
+    CONTROL: 'control',
+    SHIFT: 'shift',
+    CAPS_LOCK: 'caps_lock', // not supported by robotjs
+    SPACE: 'space',
+    PRINTSCREEN: 'printscreen',
+    INSERT: 'insert',
+
+    NUMPAD_0: 'numpad_0',
+    NUMPAD_1: 'numpad_1',
+    NUMPAD_2: 'numpad_2',
+    NUMPAD_3: 'numpad_3',
+    NUMPAD_4: 'numpad_4',
+    NUMPAD_5: 'numpad_5',
+    NUMPAD_6: 'numpad_6',
+    NUMPAD_7: 'numpad_7',
+    NUMPAD_8: 'numpad_8',
+    NUMPAD_9: 'numpad_9',
+
+    COMMA: ',',
+
+    PERIOD: '.',
+    SEMICOLON: ';',
+    QUOTE: '\'',
+    BRACKET_LEFT: '[',
+    BRACKET_RIGHT: ']',
+    BACKQUOTE: '`',
+    BACKSLASH: '\\',
+    MINUS: '-',
+    EQUAL: '=',
+    SLASH: '/'
+};
+
+/* eslint-disable max-len */
+/**
+ * Mapping between the key codes and keys defined in KEYS.
+ * The mappings are based on
+ * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#Specifications
+ */
+/* eslint-enable max-len */
+const keyCodeToKey = {
+    8: KEYS.BACKSPACE,
+    9: KEYS.TAB,
+    13: KEYS.RETURN,
+    16: KEYS.SHIFT,
+    17: KEYS.CONTROL,
+    18: KEYS.ALT,
+    20: KEYS.CAPS_LOCK,
+    27: KEYS.ESCAPE,
+    32: KEYS.SPACE,
+    33: KEYS.PAGEUP,
+    34: KEYS.PAGEDOWN,
+    35: KEYS.END,
+    36: KEYS.HOME,
+    37: KEYS.LEFT,
+    38: KEYS.UP,
+    39: KEYS.RIGHT,
+    40: KEYS.DOWN,
+    42: KEYS.PRINTSCREEN,
+    44: KEYS.PRINTSCREEN,
+    45: KEYS.INSERT,
+    46: KEYS.DELETE,
+    48: '0',
+    49: '1',
+    50: '2',
+    51: '3',
+    52: '4',
+    53: '5',
+    54: '6',
+    55: '7',
+    56: '8',
+    57: '9',
+    59: KEYS.SEMICOLON,
+    61: KEYS.EQUAL,
+    65: '',
+    66: '',
+    67: '',
+    68: '',
+    69: '',
+    70: '',
+    71: '',
+    72: '',
+    73: '',
+    74: '',
+    75: '',
+    76: '',
+    77: '',
+    78: '',
+    79: '',
+    80: '',
+    81: '',
+    82: '',
+    83: '',
+    84: '',
+    85: '',
+    86: '',
+    87: '',
+    88: '',
+    89: '',
+    90: '',
+
+    91: KEYS.CMD_L,
+    92: KEYS.CMD_R,
+    93: KEYS.CMD_R,
+    96: KEYS.NUMPAD_0,
+    97: KEYS.NUMPAD_1,
+    98: KEYS.NUMPAD_2,
+    99: KEYS.NUMPAD_3,
+    100: KEYS.NUMPAD_4,
+    101: KEYS.NUMPAD_5,
+    102: KEYS.NUMPAD_6,
+    103: KEYS.NUMPAD_7,
+    104: KEYS.NUMPAD_8,
+    105: KEYS.NUMPAD_9,
+    112: KEYS.F1,
+    113: KEYS.F2,
+    114: KEYS.F3,
+    115: KEYS.F4,
+    116: KEYS.F5,
+    117: KEYS.F6,
+    118: KEYS.F7,
+    119: KEYS.F8,
+    120: KEYS.F9,
+    121: KEYS.F10,
+    122: KEYS.F11,
+    123: KEYS.F12,
+    124: KEYS.PRINTSCREEN,
+    173: KEYS.MINUS,
+    186: KEYS.SEMICOLON,
+    187: KEYS.EQUAL,
+    188: KEYS.COMMA,
+    189: KEYS.MINUS,
+    190: KEYS.PERIOD,
+    191: KEYS.SLASH,
+    192: KEYS.BACKQUOTE,
+    219: KEYS.BRACKET_LEFT,
+    220: KEYS.BACKSLASH,
+    221: KEYS.BRACKET_RIGHT,
+    222: KEYS.QUOTE,
+    224: KEYS.META,
+    229: KEYS.SEMICOLON
+};
+const keyCodeToKey1: string[] = [];
+keyCodeToKey1[8] = KEYS.BACKSPACE;
+keyCodeToKey1[9] = KEYS.TAB;
+keyCodeToKey1[13] = KEYS.RETURN;
+keyCodeToKey1[16] = KEYS.SHIFT;
+keyCodeToKey1[17] = KEYS.CONTROL;
+keyCodeToKey1[18] = KEYS.ALT;
+keyCodeToKey1[20] = KEYS.CAPS_LOCK;
+keyCodeToKey1[27] = KEYS.ESCAPE;
+keyCodeToKey1[32] = KEYS.SPACE;
+keyCodeToKey1[33] = KEYS.PAGEUP;
+keyCodeToKey1[34] = KEYS.PAGEDOWN;
+keyCodeToKey1[35] = KEYS.END;
+keyCodeToKey1[36] = KEYS.HOME;
+keyCodeToKey1[37] = KEYS.LEFT;
+keyCodeToKey1[38] = KEYS.UP;
+keyCodeToKey1[39] = KEYS.RIGHT;
+keyCodeToKey1[40] = KEYS.DOWN;
+keyCodeToKey1[42] = KEYS.PRINTSCREEN;
+keyCodeToKey1[44] = KEYS.PRINTSCREEN;
+keyCodeToKey1[45] = KEYS.INSERT;
+keyCodeToKey1[46] = KEYS.DELETE;
+keyCodeToKey1[59] = KEYS.SEMICOLON;
+keyCodeToKey1[61] = KEYS.EQUAL;
+keyCodeToKey1[91] = KEYS.CMD_L;
+keyCodeToKey1[92] = KEYS.CMD_R;
+keyCodeToKey1[93] = KEYS.CMD_R;
+keyCodeToKey1[96] = KEYS.NUMPAD_0;
+keyCodeToKey1[97] = KEYS.NUMPAD_1;
+keyCodeToKey1[98] = KEYS.NUMPAD_2;
+keyCodeToKey1[99] = KEYS.NUMPAD_3;
+keyCodeToKey1[100] = KEYS.NUMPAD_4;
+keyCodeToKey1[101] = KEYS.NUMPAD_5;
+keyCodeToKey1[102] = KEYS.NUMPAD_6;
+keyCodeToKey1[103] = KEYS.NUMPAD_7;
+keyCodeToKey1[104] = KEYS.NUMPAD_8;
+keyCodeToKey1[105] = KEYS.NUMPAD_9;
+keyCodeToKey1[112] = KEYS.F1;
+keyCodeToKey1[113] = KEYS.F2;
+keyCodeToKey1[114] = KEYS.F3;
+keyCodeToKey1[115] = KEYS.F4;
+keyCodeToKey1[116] = KEYS.F5;
+keyCodeToKey1[117] = KEYS.F6;
+keyCodeToKey1[118] = KEYS.F7;
+keyCodeToKey1[119] = KEYS.F8;
+keyCodeToKey1[120] = KEYS.F9;
+keyCodeToKey1[121] = KEYS.F10;
+keyCodeToKey1[122] = KEYS.F11;
+keyCodeToKey1[123] = KEYS.F12;
+keyCodeToKey1[124] = KEYS.PRINTSCREEN;
+keyCodeToKey1[173] = KEYS.MINUS;
+keyCodeToKey1[186] = KEYS.SEMICOLON;
+keyCodeToKey1[187] = KEYS.EQUAL;
+keyCodeToKey1[188] = KEYS.COMMA;
+keyCodeToKey1[189] = KEYS.MINUS;
+keyCodeToKey1[190] = KEYS.PERIOD;
+keyCodeToKey1[191] = KEYS.SLASH;
+keyCodeToKey1[192] = KEYS.BACKQUOTE;
+keyCodeToKey1[219] = KEYS.BRACKET_LEFT;
+keyCodeToKey1[220] = KEYS.BACKSLASH;
+keyCodeToKey1[221] = KEYS.BRACKET_RIGHT;
+keyCodeToKey1[222] = KEYS.QUOTE;
+keyCodeToKey1[224] = KEYS.META;
+keyCodeToKey1[229] = KEYS.SEMICOLON;
+for (let i = 0; i < 10; i++) {
+    keyCodeToKey1[i + 48] = `${i}`;
+}
+
+for (let i = 0; i < 26; i++) {
+    const keyCode = i + 65;
+
+    keyCodeToKey1[keyCode] = String.fromCharCode(keyCode).toLowerCase();
+}
+
+function keyboardEventToKey(akey: number) {
+    return keyCodeToKey1[akey];
+}
 /***********************************************************************************
 
                        Lifecycle of Bizgaze Meeting
@@ -679,6 +928,8 @@ export class BizGazeMeeting {
         //remote join
         this.jitsiRoom.on(this.JitsiMeetJS.events.conference.USER_JOINED, (id: string, user: JitsiParticipant) => {
             this.onJitsiUserJoined(id, user);
+            console.log("-------------user:");
+            console.log(user);
             //remoteTracks[id] = [];
         });
 
@@ -1110,6 +1361,60 @@ export class BizGazeMeeting {
      *        
      * **************************************************************************
      */
+    sendRemoteControlReply(type: string, e: any, targetId: string) {
+        //this.Log("Sending remoteControl");
+        let param = {
+            name: 'remote-control',
+            type: '',
+            action: '',
+            button: 0,
+            x: 0,
+            y: 0,
+            modifiers: {},
+            key: ''
+        };
+        switch (type) {
+            case 'permissions':
+                param.type = 'permissions';
+                param.action = 'request';
+                break;
+            case 'mousemove':
+                param.type = 'mousemove';
+                param.x = e.x;
+                param.y = e.y;
+                break;
+            case 'mousedown':
+                param.type = 'mousedown';
+                param.button = e.button;
+                break;
+            case 'mouseup':
+                param.type = 'mouseup';
+                param.button = e.button;
+                break;
+            case 'keydown':
+                param.type = 'keydown';
+                param.modifiers = e.modifiers;
+                param.key = keyboardEventToKey(e.key);
+
+                console.info('--------------------param',param);
+                break;
+            case 'keyup':
+                param.type = 'keyup';
+                param.modifiers = e.modifiers;
+                param.key = keyboardEventToKey(e.key);
+
+                console.info('--------------------param',param);
+                break;
+        }
+        
+        /*let param = {
+            name: 'remote-control',
+            type: 'mousedown',
+            button: 1
+        };*/
+
+        this.jitsiRoom.sendEndpointMessage(targetId, param);
+    }
 
     kickParticipantOut(targetId: string) {
         this.Log("Sending kick out");
@@ -1198,7 +1503,6 @@ export class BizGazeMeeting {
 
         let audioMuted = false;
         this.getLocalTracks().forEach(track => {
-            console.log("--------------it's me-OnToggleMuteMyAudio------------");
             if (track.getType() === MediaType.AUDIO && track.isMuted()) audioMuted = true;
         });
         this.muteMyAudio(!audioMuted);
@@ -1218,7 +1522,6 @@ export class BizGazeMeeting {
     public muteMyAudio(mute: boolean) {
         
         this.getLocalTracks().forEach(track => {
-            console.log("--------------it's me-muteMyAudio------------");
             if (track.getType() === MediaType.AUDIO) {
                 if (mute) track.mute();
                 else track.unmute();
@@ -1514,18 +1817,13 @@ export class BizGazeMeeting {
 
     //screenshare
     public async toggleScreenShare() {
-
         if (this.screenSharing) {
             await this.turnOnCamera();
         } else {
-           
             if (this.myInfo.IsHost) {
-
                 await this.turnOnScreenShare();
             } else {
-                
                 if (this.roomInfo.IsScreenShareRequired) {
-
                     //ask permission to host
                     this.sendJitsiBroadcastCommand(
                         JitsiCommand.ASK_SCREENSHARE,
@@ -1535,9 +1833,7 @@ export class BizGazeMeeting {
                         "Sent your screen sharing request",
                         NotificationType.Screensharing
                     );
-                }
-                else {
-                    
+                }else {
                     await this.turnOnScreenShare();
                 }
             }
@@ -1594,7 +1890,6 @@ export class BizGazeMeeting {
             devices: ['desktop']
         })
             .then(async (tracks: JitsiTrack[]) => {
-
                 if (tracks.length <= 0) {
                     throw new Error("No Screen Selected");
                 }

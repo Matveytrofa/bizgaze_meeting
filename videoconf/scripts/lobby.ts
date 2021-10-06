@@ -203,7 +203,6 @@ export class Lobby {
     }
 
     createLocalTracks(cameraDeviceId: string, micDeviceId: string): Promise<JitsiTrack[]> {
-        console.log("------createLocalTracks------------:"+cameraDeviceId+" ----------- "+micDeviceId);
         this.videoTrackError = null;
         this.audioTrackError = null;
 

@@ -105,6 +105,7 @@ export class MeetingUI {
         const vProps = new VideoPanelGridProps();
         vProps.grantModeratorRole = this.meeting.grantModeratorRole.bind(this.meeting);
         vProps.kickParticipantOut = this.meeting.kickParticipantOut.bind(this.meeting);
+        vProps.sendRemoteControlReply = this.meeting.sendRemoteControlReply.bind(this.meeting);
         vProps.muteMyAudio = this.meeting.muteMyAudio.bind(this.meeting);
         vProps.muteMyVideo = this.meeting.muteMyVideo.bind(this.meeting);
         vProps.muteUserAudio = this.meeting.muteUserAudio.bind(this.meeting);
