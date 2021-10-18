@@ -20,7 +20,7 @@ export class VideoPanelProps {
     fullscreenClass: string;
     popupMenuClass: string;
 }
-
+const DISCO_REMOTE_CONTROL_FEATURE = 'http://jitsi.org/meet/remotecontrol';
 export class VideoPanel {
     panelClass: string;
     fullscreenClass: string;
@@ -186,7 +186,17 @@ export class VideoPanel {
             this.audioMuteMenuItem.style.display = userHaveMicrophone ? "flex" : "none";
             this.grantModeratorMenuItem.style.display = "flex";
             this.kickParticipantMenuItem.style.display = "flex";
-            this.remoteControlMenuItem.style.display = "flex";
+            this.remoteControlMenuItem.style.display = "none";
+            jitsiUser.getFeatures()
+                .then(features => {
+                    /**/
+                    const b = features.has(DISCO_REMOTE_CONTROL_FEATURE);
+                    if (b) this.remoteControlMenuItem.style.display = "flex";
+                    
+                    console.log("-------------user:" + b);
+                    console.log(jitsiUser);
+                })
+            
         } else {
             this.videoMuteMenuItem.style.display = "none";
             this.audioMuteMenuItem.style.display = "none";
@@ -255,10 +265,8 @@ export class VideoPanel {
         $(this.root).on('mousedown', function (e) {
             //e.preventDefault();
             e.stopPropagation();
-            console.log("------------i am here");
             if (e.which === 3) {
                 e.preventDefault();
-                console.log("------------i am here");
             }
             let ae = {
                 button: e.button+1,
@@ -270,7 +278,6 @@ export class VideoPanel {
         $(this.root).on('mouseup', function (e) {
             //e.preventDefault();
             e.stopPropagation();
-            console.log("------------you are here");
             if (e.which === 3)e.preventDefault();
             
             let ae = {
@@ -280,21 +287,24 @@ export class VideoPanel {
             };
             _this.props.sendRemoteControlReply('mouseup', ae, jitsiUser.getId());
         })
+        var enableHandler: boolean = true;
         $(this.root).on('mousemove', function (e) {
-            //console.log(`${this.offsetHeight}---${this.offsetWidth}-${this.scrollWidth}-${this.clientHeight}`);
-            //e.preventDefault();
-            e.stopPropagation();
-console.log("------------he is here");
-            let ae = {
-                button: e.button+1,
-                x: e.offsetX/this.offsetWidth,
-                y: e.offsetY/this.offsetHeight
-            };
-            _this.props.sendRemoteControlReply('mousemove', ae, jitsiUser.getId());
-        })
-        /**/
+                if (enableHandler) {
+                    e.stopPropagation();
+                    let ae = {
+                        button: e.button + 1,
+                        x: e.offsetX / this.offsetWidth,
+                        y: e.offsetY / this.offsetHeight
+                    };
+                    _this.props.sendRemoteControlReply('mousemove', ae, jitsiUser.getId());
+                    enableHandler = false;
+                }
+            }
+        )
+        var timer: number = window.setInterval(function () {
+            enableHandler = true;
+        }, 200);
         $(window).unbind().on('keydown', function (e) {
-            //console.log(`${this.offsetHeight}---${this.offsetWidth}-${this.scrollWidth}-${this.clientHeight}`);
             
             const modifiers = [];
             if (e.shiftKey) {
@@ -318,11 +328,9 @@ console.log("------------he is here");
                 modifiers: modifiers,
                 key:e.keyCode,
             };
-            console.log("------------key is here-----" + e.keyCode);
             _this.props.sendRemoteControlReply('keydown', ae, jitsiUser.getId());
         })
         $(window).on('keyup', function (e) {
-            //console.log(`${this.offsetHeight}---${this.offsetWidth}-${this.scrollWidth}-${this.clientHeight}`);
 
             const modifiers = [];
             if (e.shiftKey) {
@@ -346,7 +354,6 @@ console.log("------------he is here");
                 modifiers: modifiers,
                 key: e.keyCode,
             };
-            console.log("------------key is here-----" + e.keyCode);
             _this.props.sendRemoteControlReply('keyup', ae, jitsiUser.getId());
         })
     }
@@ -429,7 +436,7 @@ console.log("------------he is here");
 
     private create(): HTMLElement {
 
-        const videoTag = `<video autoplay playsinline  class='${this.videoElementClass}' id='remoteVideo_${this.Id}'></video>`;
+        const videoTag = `<video autoplay playsinline style='object-fit:cover; '  class='${this.videoElementClass}' id='remoteVideo_${this.Id}'></video>`;
         const audioTag = `<audio autoplay="" id="remoteAudio_${this.Id}"></audio>`;
         
         const avatarVisible = 'visible';
@@ -564,8 +571,8 @@ console.log("------------he is here");
                         <li aria-label="" class="overflow-menu-item remote-control">
                             <span class="overflow-menu-item-icon">
                                 <div class="jitsi-icon ">
-                                    <svg height="20" width="20" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 16.667a6.667 6.667 0 100-13.334 6.667 6.667 0 000 13.334zm0 1.666a8.333 8.333 0 110-16.666 8.333 8.333 0 010 16.666zm0-9.512l2.357-2.357a.833.833 0 111.179 1.179L11.179 10l2.357 2.357a.833.833 0 11-1.179 1.179L10 11.178l-2.357 2.357a.833.833 0 01-1.178-1.179L8.822 10 6.465 7.643a.833.833 0 111.178-1.179L10 8.821z"></path>
+                                    <svg height="22" width="22" viewBox="0 0 22 28">
+                                        <path d="M21.625 14.484L.875 26.015c-.484.266-.875.031-.875-.516v-23c0-.547.391-.781.875-.516l20.75 11.531c.484.266.484.703 0 .969z"></path>
                                     </svg>
                                 </div>
                             </span>

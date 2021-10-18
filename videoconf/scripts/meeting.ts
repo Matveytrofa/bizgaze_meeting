@@ -20,6 +20,9 @@ import { JitsiCommandQueue, JitsiPrivateCommandQueue } from "./jitsi/JitsiComman
 import { FileMeta } from "./file/FileMeta";
 import { VideoPanel } from "./components/VideoPanel";
 import { log } from "node:console";
+import { features } from "node:process";
+
+
 
 declare global {
     interface Window {
@@ -119,191 +122,82 @@ const KEYS = {
     SLASH: '/'
 };
 
-/* eslint-disable max-len */
-/**
- * Mapping between the key codes and keys defined in KEYS.
- * The mappings are based on
- * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#Specifications
- */
-/* eslint-enable max-len */
-const keyCodeToKey = {
-    8: KEYS.BACKSPACE,
-    9: KEYS.TAB,
-    13: KEYS.RETURN,
-    16: KEYS.SHIFT,
-    17: KEYS.CONTROL,
-    18: KEYS.ALT,
-    20: KEYS.CAPS_LOCK,
-    27: KEYS.ESCAPE,
-    32: KEYS.SPACE,
-    33: KEYS.PAGEUP,
-    34: KEYS.PAGEDOWN,
-    35: KEYS.END,
-    36: KEYS.HOME,
-    37: KEYS.LEFT,
-    38: KEYS.UP,
-    39: KEYS.RIGHT,
-    40: KEYS.DOWN,
-    42: KEYS.PRINTSCREEN,
-    44: KEYS.PRINTSCREEN,
-    45: KEYS.INSERT,
-    46: KEYS.DELETE,
-    48: '0',
-    49: '1',
-    50: '2',
-    51: '3',
-    52: '4',
-    53: '5',
-    54: '6',
-    55: '7',
-    56: '8',
-    57: '9',
-    59: KEYS.SEMICOLON,
-    61: KEYS.EQUAL,
-    65: '',
-    66: '',
-    67: '',
-    68: '',
-    69: '',
-    70: '',
-    71: '',
-    72: '',
-    73: '',
-    74: '',
-    75: '',
-    76: '',
-    77: '',
-    78: '',
-    79: '',
-    80: '',
-    81: '',
-    82: '',
-    83: '',
-    84: '',
-    85: '',
-    86: '',
-    87: '',
-    88: '',
-    89: '',
-    90: '',
-
-    91: KEYS.CMD_L,
-    92: KEYS.CMD_R,
-    93: KEYS.CMD_R,
-    96: KEYS.NUMPAD_0,
-    97: KEYS.NUMPAD_1,
-    98: KEYS.NUMPAD_2,
-    99: KEYS.NUMPAD_3,
-    100: KEYS.NUMPAD_4,
-    101: KEYS.NUMPAD_5,
-    102: KEYS.NUMPAD_6,
-    103: KEYS.NUMPAD_7,
-    104: KEYS.NUMPAD_8,
-    105: KEYS.NUMPAD_9,
-    112: KEYS.F1,
-    113: KEYS.F2,
-    114: KEYS.F3,
-    115: KEYS.F4,
-    116: KEYS.F5,
-    117: KEYS.F6,
-    118: KEYS.F7,
-    119: KEYS.F8,
-    120: KEYS.F9,
-    121: KEYS.F10,
-    122: KEYS.F11,
-    123: KEYS.F12,
-    124: KEYS.PRINTSCREEN,
-    173: KEYS.MINUS,
-    186: KEYS.SEMICOLON,
-    187: KEYS.EQUAL,
-    188: KEYS.COMMA,
-    189: KEYS.MINUS,
-    190: KEYS.PERIOD,
-    191: KEYS.SLASH,
-    192: KEYS.BACKQUOTE,
-    219: KEYS.BRACKET_LEFT,
-    220: KEYS.BACKSLASH,
-    221: KEYS.BRACKET_RIGHT,
-    222: KEYS.QUOTE,
-    224: KEYS.META,
-    229: KEYS.SEMICOLON
-};
-const keyCodeToKey1: string[] = [];
-keyCodeToKey1[8] = KEYS.BACKSPACE;
-keyCodeToKey1[9] = KEYS.TAB;
-keyCodeToKey1[13] = KEYS.RETURN;
-keyCodeToKey1[16] = KEYS.SHIFT;
-keyCodeToKey1[17] = KEYS.CONTROL;
-keyCodeToKey1[18] = KEYS.ALT;
-keyCodeToKey1[20] = KEYS.CAPS_LOCK;
-keyCodeToKey1[27] = KEYS.ESCAPE;
-keyCodeToKey1[32] = KEYS.SPACE;
-keyCodeToKey1[33] = KEYS.PAGEUP;
-keyCodeToKey1[34] = KEYS.PAGEDOWN;
-keyCodeToKey1[35] = KEYS.END;
-keyCodeToKey1[36] = KEYS.HOME;
-keyCodeToKey1[37] = KEYS.LEFT;
-keyCodeToKey1[38] = KEYS.UP;
-keyCodeToKey1[39] = KEYS.RIGHT;
-keyCodeToKey1[40] = KEYS.DOWN;
-keyCodeToKey1[42] = KEYS.PRINTSCREEN;
-keyCodeToKey1[44] = KEYS.PRINTSCREEN;
-keyCodeToKey1[45] = KEYS.INSERT;
-keyCodeToKey1[46] = KEYS.DELETE;
-keyCodeToKey1[59] = KEYS.SEMICOLON;
-keyCodeToKey1[61] = KEYS.EQUAL;
-keyCodeToKey1[91] = KEYS.CMD_L;
-keyCodeToKey1[92] = KEYS.CMD_R;
-keyCodeToKey1[93] = KEYS.CMD_R;
-keyCodeToKey1[96] = KEYS.NUMPAD_0;
-keyCodeToKey1[97] = KEYS.NUMPAD_1;
-keyCodeToKey1[98] = KEYS.NUMPAD_2;
-keyCodeToKey1[99] = KEYS.NUMPAD_3;
-keyCodeToKey1[100] = KEYS.NUMPAD_4;
-keyCodeToKey1[101] = KEYS.NUMPAD_5;
-keyCodeToKey1[102] = KEYS.NUMPAD_6;
-keyCodeToKey1[103] = KEYS.NUMPAD_7;
-keyCodeToKey1[104] = KEYS.NUMPAD_8;
-keyCodeToKey1[105] = KEYS.NUMPAD_9;
-keyCodeToKey1[112] = KEYS.F1;
-keyCodeToKey1[113] = KEYS.F2;
-keyCodeToKey1[114] = KEYS.F3;
-keyCodeToKey1[115] = KEYS.F4;
-keyCodeToKey1[116] = KEYS.F5;
-keyCodeToKey1[117] = KEYS.F6;
-keyCodeToKey1[118] = KEYS.F7;
-keyCodeToKey1[119] = KEYS.F8;
-keyCodeToKey1[120] = KEYS.F9;
-keyCodeToKey1[121] = KEYS.F10;
-keyCodeToKey1[122] = KEYS.F11;
-keyCodeToKey1[123] = KEYS.F12;
-keyCodeToKey1[124] = KEYS.PRINTSCREEN;
-keyCodeToKey1[173] = KEYS.MINUS;
-keyCodeToKey1[186] = KEYS.SEMICOLON;
-keyCodeToKey1[187] = KEYS.EQUAL;
-keyCodeToKey1[188] = KEYS.COMMA;
-keyCodeToKey1[189] = KEYS.MINUS;
-keyCodeToKey1[190] = KEYS.PERIOD;
-keyCodeToKey1[191] = KEYS.SLASH;
-keyCodeToKey1[192] = KEYS.BACKQUOTE;
-keyCodeToKey1[219] = KEYS.BRACKET_LEFT;
-keyCodeToKey1[220] = KEYS.BACKSLASH;
-keyCodeToKey1[221] = KEYS.BRACKET_RIGHT;
-keyCodeToKey1[222] = KEYS.QUOTE;
-keyCodeToKey1[224] = KEYS.META;
-keyCodeToKey1[229] = KEYS.SEMICOLON;
+const keyCodeToKey: string[] = [];
+keyCodeToKey[8] = KEYS.BACKSPACE;
+keyCodeToKey[9] = KEYS.TAB;
+keyCodeToKey[13] = KEYS.RETURN;
+keyCodeToKey[16] = KEYS.SHIFT;
+keyCodeToKey[17] = KEYS.CONTROL;
+keyCodeToKey[18] = KEYS.ALT;
+keyCodeToKey[20] = KEYS.CAPS_LOCK;
+keyCodeToKey[27] = KEYS.ESCAPE;
+keyCodeToKey[32] = KEYS.SPACE;
+keyCodeToKey[33] = KEYS.PAGEUP;
+keyCodeToKey[34] = KEYS.PAGEDOWN;
+keyCodeToKey[35] = KEYS.END;
+keyCodeToKey[36] = KEYS.HOME;
+keyCodeToKey[37] = KEYS.LEFT;
+keyCodeToKey[38] = KEYS.UP;
+keyCodeToKey[39] = KEYS.RIGHT;
+keyCodeToKey[40] = KEYS.DOWN;
+keyCodeToKey[42] = KEYS.PRINTSCREEN;
+keyCodeToKey[44] = KEYS.PRINTSCREEN;
+keyCodeToKey[45] = KEYS.INSERT;
+keyCodeToKey[46] = KEYS.DELETE;
+keyCodeToKey[59] = KEYS.SEMICOLON;
+keyCodeToKey[61] = KEYS.EQUAL;
+keyCodeToKey[91] = KEYS.CMD_L;
+keyCodeToKey[92] = KEYS.CMD_R;
+keyCodeToKey[93] = KEYS.CMD_R;
+keyCodeToKey[96] = KEYS.NUMPAD_0;
+keyCodeToKey[97] = KEYS.NUMPAD_1;
+keyCodeToKey[98] = KEYS.NUMPAD_2;
+keyCodeToKey[99] = KEYS.NUMPAD_3;
+keyCodeToKey[100] = KEYS.NUMPAD_4;
+keyCodeToKey[101] = KEYS.NUMPAD_5;
+keyCodeToKey[102] = KEYS.NUMPAD_6;
+keyCodeToKey[103] = KEYS.NUMPAD_7;
+keyCodeToKey[104] = KEYS.NUMPAD_8;
+keyCodeToKey[105] = KEYS.NUMPAD_9;
+keyCodeToKey[112] = KEYS.F1;
+keyCodeToKey[113] = KEYS.F2;
+keyCodeToKey[114] = KEYS.F3;
+keyCodeToKey[115] = KEYS.F4;
+keyCodeToKey[116] = KEYS.F5;
+keyCodeToKey[117] = KEYS.F6;
+keyCodeToKey[118] = KEYS.F7;
+keyCodeToKey[119] = KEYS.F8;
+keyCodeToKey[120] = KEYS.F9;
+keyCodeToKey[121] = KEYS.F10;
+keyCodeToKey[122] = KEYS.F11;
+keyCodeToKey[123] = KEYS.F12;
+keyCodeToKey[124] = KEYS.PRINTSCREEN;
+keyCodeToKey[173] = KEYS.MINUS;
+keyCodeToKey[186] = KEYS.SEMICOLON;
+keyCodeToKey[187] = KEYS.EQUAL;
+keyCodeToKey[188] = KEYS.COMMA;
+keyCodeToKey[189] = KEYS.MINUS;
+keyCodeToKey[190] = KEYS.PERIOD;
+keyCodeToKey[191] = KEYS.SLASH;
+keyCodeToKey[192] = KEYS.BACKQUOTE;
+keyCodeToKey[219] = KEYS.BRACKET_LEFT;
+keyCodeToKey[220] = KEYS.BACKSLASH;
+keyCodeToKey[221] = KEYS.BRACKET_RIGHT;
+keyCodeToKey[222] = KEYS.QUOTE;
+keyCodeToKey[224] = KEYS.META;
+keyCodeToKey[229] = KEYS.SEMICOLON;
 for (let i = 0; i < 10; i++) {
-    keyCodeToKey1[i + 48] = `${i}`;
+    keyCodeToKey[i + 48] = `${i}`;
 }
 
 for (let i = 0; i < 26; i++) {
     const keyCode = i + 65;
 
-    keyCodeToKey1[keyCode] = String.fromCharCode(keyCode).toLowerCase();
+    keyCodeToKey[keyCode] = String.fromCharCode(keyCode).toLowerCase();
 }
 
 function keyboardEventToKey(akey: number) {
-    return keyCodeToKey1[akey];
+    return keyCodeToKey[akey];
 }
 /***********************************************************************************
 
@@ -340,8 +234,10 @@ export class BizGazeMeeting {
     jitsiConnection: any;
 
 
-    JitsiServerDomain = "unimail.in";
-    
+    //JitsiServerDomain = "idlests.com";
+    //JitsiServerDomain = "unimail.in";
+    JitsiServerDomain = "meetserver.com";
+
     localTracks: JitsiTrack[] = [];
 
     screenSharing = false;
@@ -926,8 +822,8 @@ export class BizGazeMeeting {
         //remote join
         this.jitsiRoom.on(this.JitsiMeetJS.events.conference.USER_JOINED, (id: string, user: JitsiParticipant) => {
             this.onJitsiUserJoined(id, user);
-            console.log("-------------user:");
-            console.log(user);
+            
+            
             //remoteTracks[id] = [];
         });
 

@@ -15,6 +15,9 @@
     <link href="~/lib/bootstrap.min.css" rel="stylesheet" type="text/css">
         -->
     <style>
+        body {
+            overflow:hidden;
+        }
         menu {
             display: block;
         }
@@ -43,64 +46,64 @@
             font-family: -apple-system,BlinkMacSystemFont,open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
         }
 
-            .dropdown-menu.pull-right {
-                right: 0;
-                left: auto;
-            }
+        .dropdown-menu.pull-right {
+            right: 0;
+            left: auto;
+        }
 
-            .dropdown-menu .divider {
-                height: 1px;
-                margin: 9px 0;
-                overflow: hidden;
-                background-color: #3f3f3f;
-            }
+        .dropdown-menu .divider {
+            height: 1px;
+            margin: 9px 0;
+            overflow: hidden;
+            background-color: #3f3f3f;
+        }
 
-            .dropdown-menu > li > a svg {
-                color: #000;
-                fill: #fff;
-                margin-right: 10px;
-            }
+        .dropdown-menu > li > a svg {
+            color: #000;
+            fill: #fff;
+            margin-right: 10px;
+        }
 
-            .dropdown-menu > li > a {
-                display: block;
-                padding: 10px 10px;
-                clear: both;
-                font-weight: normal;
-                line-height: 1.42857143;
-                color: #333;
-                white-space: nowrap;
-            }
+        .dropdown-menu > li > a {
+            display: block;
+            padding: 10px 10px;
+            clear: both;
+            font-weight: normal;
+            line-height: 1.42857143;
+            color: #333;
+            white-space: nowrap;
+        }
 
-                .dropdown-menu > li > a:hover,
-                .dropdown-menu > li > a:focus {
-                    color: #262626;
-                    text-decoration: none;
-                    background-color: #f5f5f5;
-                }
+        .dropdown-menu > li > a:hover,
+        .dropdown-menu > li > a:focus {
+            color: #262626;
+            text-decoration: none;
+            background-color: #f5f5f5;
+        }
 
-            .dropdown-menu > .active > a,
-            .dropdown-menu > .active > a:hover,
-            .dropdown-menu > .active > a:focus {
-                color: #fff;
-                text-decoration: none;
-                background-color: #337ab7;
-                outline: 0;
-            }
+        .dropdown-menu > .active > a,
+        .dropdown-menu > .active > a:hover,
+        .dropdown-menu > .active > a:focus {
+            color: #fff;
+            text-decoration: none;
+            background-color: #337ab7;
+            outline: 0;
+        }
 
-            .dropdown-menu > .disabled > a,
-            .dropdown-menu > .disabled > a:hover,
-            .dropdown-menu > .disabled > a:focus {
-                color: #777;
-            }
+        .dropdown-menu > .disabled > a,
+        .dropdown-menu > .disabled > a:hover,
+        .dropdown-menu > .disabled > a:focus {
+            color: #777;
+        }
 
-                .dropdown-menu > .disabled > a:hover,
-                .dropdown-menu > .disabled > a:focus {
-                    text-decoration: none;
-                    cursor: not-allowed;
-                    background-color: transparent;
-                    background-image: none;
-                    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-                }
+        .dropdown-menu > .disabled > a:hover,
+        .dropdown-menu > .disabled > a:focus {
+            text-decoration: none;
+            cursor: not-allowed;
+            background-color: transparent;
+            background-image: none;
+            filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+        }
 
         .open > .dropdown-menu {
             display: block;
@@ -141,6 +144,8 @@
         /* width */
         ::-webkit-scrollbar {
             width: 7px !important;
+            /*display: none;*/
+            
         }
 
         /* Track */
@@ -163,11 +168,11 @@
             color: #f1f1f1;
         }
 
-            menu > li > a:focus, .dropdown-menu > li > a:hover {
-                color: #f1f1f1;
-                text-decoration: none;
-                background-color: #36383c;
-            }
+        menu > li > a:focus, .dropdown-menu > li > a:hover {
+            color: #f1f1f1;
+            text-decoration: none;
+            background-color: #36383c;
+        }
         ind-menu-item {
             height:40px;
         }
@@ -175,7 +180,7 @@
 }
 
 
-<div id="content" style="height: 100%; " class="d-flex">
+<div id="content" style="height: 100%; overflow:hidden !important; " class="d-flex">
     <div class="subject">
         <div class="subject-info-container">
             <div class="subject-info">
@@ -802,7 +807,9 @@
     <script src="~/lib/jquery.min.js" type="text/javascript"></script>
     <script src="~/lib/bootstrap.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        
+        var atoolbox = document.querySelector('.new-toolbox');
+        var asubject = document.querySelector('.subject');
+
     window.JitsiMeetJS = JitsiMeetJS;
 
     window._roomId = '@Model._meetingId';
@@ -812,7 +819,48 @@
     window._micId = '@Model._micId';
     window._speakerId = '@Model._speakerId';
     window._videoMute = '@Model._videoMute';
-    window._audioMute = '@Model._audioMute';
+        window._audioMute = '@Model._audioMute';
+
+        const downstate = 'downstate';
+        const upstate = 'upstate';
+        var curstate = upstate;
+        var wait_time = 3;
+
+        var timeoutval = wait_time;
+
+        window.addEventListener('mousemove', () => { motion_detector() });
+        function motion_detector() {
+            if (curstate == upstate) timeoutval = wait_time;
+            else if (curstate == downstate) {
+                curstate = upstate;
+                upstage();
+            }
+
+        }
+
+        function watcher() {
+            if (timeoutval == 0) {
+                downstage();
+            } else {
+                setTimeout(function () { watcher(); }, 1000);
+                timeoutval--;
+            }
+
+        }
+
+        function downstage() {
+            asubject.classList.remove("visible");
+            atoolbox.classList.remove("visible");
+            //curstate = downstate;
+            setTimeout(function () { curstate = downstate; }, 300);
+        }
+        function upstage() {
+            asubject.classList.add("visible");
+            atoolbox.classList.add("visible");
+            watcher();
+        }
+        watcher();
+        
     </script>
 
     <script src="~/lib/metronic/plugins/global/plugins.bundle.js"></script>
