@@ -37,11 +37,12 @@ export class FileReceiver {
                 </div>
             </div>`;
         this.props.addChatItem(this.props.senderId, this.props.senderName, html, false);
-
+        
         this.receivingElement = $("#" + receivingId);
         this.progressElement = this.receivingElement.find(".progress-bar");
         this.downloadElement = this.receivingElement.find(".download");
         this.receivingElement.closest(".usermessage").css("white-space", "nowrap");
+        
     }
 
     readFileData(data: ArrayBuffer) {

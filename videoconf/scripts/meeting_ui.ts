@@ -226,6 +226,7 @@ export class MeetingUI {
         allowCallback: Function, denyCallback: Function, param: any) {
         const props = new AskDialogProps();
         props.title = title;
+        
         props.message = message;
         props.icon = icon;
         props.isWarning = true;

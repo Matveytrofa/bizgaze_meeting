@@ -726,7 +726,6 @@ E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meetin
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll
-E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.csproj.AssemblyReference.cache
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.GeneratedMSBuildEditorConfig.editorconfig
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.AssemblyInfoInputs.cache
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.AssemblyInfo.cs
@@ -758,3 +757,4 @@ E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meetin
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\ref\BizGazeMeeting.dll
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.pdb
 E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.genruntimeconfig.cache
+E:\jitsi\work(razor)\bizgaze_meeting-master(latest-from-gyongbom)\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\videoconf\obj\Debug\net5.0\BizGazeMeeting.csproj.AssemblyReference.cache

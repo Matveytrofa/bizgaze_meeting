@@ -12,6 +12,7 @@ export enum JitsiCommand {
     INIT_MEDIA_POLICY = "init_media_policy",
     ASK_RECORDING = "ask-recording",
     ASK_SCREENSHARE = "ask-screenshare",
+    ASK_MULTISHARE = "ask-multishare",
     ASK_HANDRAISE = "ask-handraise",
     FILE_META = "file_meta",
     FILE_SLICE = "file_slice",
@@ -20,7 +21,6 @@ export enum JitsiCommand {
     MUTE_All_AUDIO = "mute_all_audio",
     MUTE_All_VIDEO = "mute_all_video",
 };
-
 
 
 export enum JitsiPrivateCommand {

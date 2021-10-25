@@ -1,10 +1,14 @@
 ﻿import { getCapacityLabel } from "../util/snippet";
 import { FileMeta } from "./FileMeta";
+import { getCurTime } from "../util/TimeUtil";
+
 
 export class FileSenderProps {
     sessionId: string;
+    meta: FileMeta;
     fileSendingPanel: HTMLElement; //attach new progress item here
     fileElement: HTMLInputElement; //file source <input type="file">
+    addChatItem: (id: string, username: string, message: string, isPrivate: boolean) => {};
     onError: (filename: string, message: string) => {};
     onFinished: (filename: string, message: string) => {}
     sendFileMeta: (meta: FileMeta) => {};
@@ -17,6 +21,8 @@ export class FileSender {
     //const
     file: File;
     sendingElement: JQuery;
+    downloadElement: JQuery;
+    sendBuf: ArrayBuffer[] = [];
 
     constructor(props:FileSenderProps) {
         this.props = props;
@@ -37,6 +43,7 @@ export class FileSender {
 
         //create ui
         const sendingId = `sending-${this.props.sessionId}`;
+        
         const html = `
             <div class="file-progress" id="${sendingId}">
                 <div class="fileinfo">
@@ -46,7 +53,9 @@ export class FileSender {
                     <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>`;
+            
 
+        
         $(this.props.fileSendingPanel).append(html);
 
         this.sendingElement = $("#" + sendingId);
@@ -95,7 +104,36 @@ export class FileSender {
                 
             } else {
                 this.removeSelf();
-                this.props.onFinished(file.name, `Sending finished`);
+                //this.props.onFinished(file.name, `Sending finished`);
+                const time = getCurTime();
+
+                var binary = '';
+                var bytes = new Uint8Array(blob);
+                var len = bytes.byteLength;
+                
+                for (var i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                const sender = new Blob(Array.from(binary));
+                
+                const html = `
+                    <div class="chat-message-group local">
+                        <div class="chatmessage-wrapper">
+                            <div class="chatmessage" >
+                                <div class="replywrapper">
+                                    <div class="messagecontent">
+                                        <div class="fileinfo">
+                                            <a href = "${ URL.createObjectURL(sender)}" download = "${this.file.name}" > ${ this.file.name} (${getCapacityLabel(this.file.size) }) </a>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div >
+                             <div class="timestamp" >${time}</div>
+                        </div>
+                    </div>
+                `;
+                
+                $("#chatconversation").append(html);
             }
         });
 
