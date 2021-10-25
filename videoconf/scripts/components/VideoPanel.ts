@@ -482,13 +482,18 @@ export class VideoPanel {
 
         const panelHtml = `
         <span class="${this.panelClass} display-video" onContextMenu = "return false;">
+            <div>
+                <label>Version 1.0</label>
+            </div>
             ${videoTag} 
             ${audioTag}
             <div class="videocontainer__toolbar">
                 <div> ${cameraStatus} ${micStatus} ${moderatorStatus}</div>
             </div>
             <div class="videocontainer__hoverOverlay"></div>
-            <div class="displayNameContainer"><span class="displayname" id="localDisplayName">Name</span></div>
+            <div class="displayNameContainer"><span class="displayname" id="localDisplayName">Name</span>
+            
+            </div>
             <div class="avatar-container ${avatarVisible}" style="height: 105.5px; width: 105.5px;">
                 <div class="avatar  userAvatar" style="background-color: rgba(234, 255, 128, 0.4); font-size: 180%; height: 100%; width: 100%;">
                     <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

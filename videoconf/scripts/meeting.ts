@@ -240,8 +240,9 @@ export class BizGazeMeeting {
     jitsiConnection: any;
 
 
-    JitsiServerDomain = "unimail.in";
-    //JitsiServerDomain = "meetserver.com";
+    //JitsiServerDomain = "idlests.com";
+    //JitsiServerDomain = "unimail.in";
+    JitsiServerDomain = "meetserver.com";
 
     localTracks: JitsiTrack[] = [];
 
