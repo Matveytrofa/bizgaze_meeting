@@ -1942,11 +1942,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\jitsi\\work(razor)\\bizgaze_meeting-master(latest-from-gyongbom)\\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\\videoconf\\BizGazeMeeting.csproj",
+      "projectUniqueName": "E:\\jitsi\\work(razor)\\bizgaze_meeting-master(latest-from-gyongbom)\\meeting_result(gitupload)\\bizgaze_meeting\\videoconf\\BizGazeMeeting.csproj",
       "projectName": "BizGazeMeeting",
-      "projectPath": "E:\\jitsi\\work(razor)\\bizgaze_meeting-master(latest-from-gyongbom)\\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\\videoconf\\BizGazeMeeting.csproj",
+      "projectPath": "E:\\jitsi\\work(razor)\\bizgaze_meeting-master(latest-from-gyongbom)\\meeting_result(gitupload)\\bizgaze_meeting\\videoconf\\BizGazeMeeting.csproj",
       "packagesPath": "C:\\Users\\dragonpc\\.nuget\\packages\\",
-      "outputPath": "E:\\jitsi\\work(razor)\\bizgaze_meeting-master(latest-from-gyongbom)\\bizgaze_meeting-master(latest-from-gyongbom)_in_trial\\videoconf\\obj\\",
+      "outputPath": "E:\\jitsi\\work(razor)\\bizgaze_meeting-master(latest-from-gyongbom)\\meeting_result(gitupload)\\bizgaze_meeting\\videoconf\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
