@@ -66,7 +66,8 @@ namespace BizGazeMeeting.Model
 
 		public bool IsControlAllowed
         {
-			get { return _meeting.IsControlAllowed; }
+			//get { return _meeting.IsControlAllowed; }
+			get { return false; }
 			
 		}
 
@@ -77,11 +78,13 @@ namespace BizGazeMeeting.Model
 
 		public bool IsMultipleSharingAllowed
         {
-			get { return _meeting.IsMultipleSharingAllowed; }
+			//get { return _meeting.IsMultipleSharingAllowed; }
+			get { return false; }
 		}
 		public bool IsScreenShareRequired
         {
-			get { return _meeting.IsScreenShareRequired; }
+			//get { return _meeting.IsScreenShareRequired; }
+			get { return true; }
 		}
 
 		public bool IsOpened

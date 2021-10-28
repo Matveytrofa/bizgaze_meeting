@@ -9,6 +9,7 @@ export enum JitsiCommand {
     MUTE_VIDEO = "mute_video",
     ALLOW_CAMERA = "allow_video",
     ALLOW_MIC = "allow_audio",
+    ALLOW_VIDEO = "allow_video",
     INIT_MEDIA_POLICY = "init_media_policy",
     ASK_RECORDING = "ask-recording",
     ASK_SCREENSHARE = "ask-screenshare",

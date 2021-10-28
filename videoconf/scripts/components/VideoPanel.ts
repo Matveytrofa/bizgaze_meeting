@@ -482,8 +482,10 @@ export class VideoPanel {
 
         const panelHtml = `
         <span class="${this.panelClass} display-video" onContextMenu = "return false;">
+            
             ${videoTag} 
             ${audioTag}
+            
             <div class="videocontainer__toolbar">
                 <div> ${cameraStatus} ${micStatus} ${moderatorStatus}</div>
             </div>
