@@ -224,6 +224,8 @@ export class BizGazeMeeting {
     isToggleMuteMyAudio: boolean = false; //isControlAllowed
     isToggleMuteMyVideo: boolean = false; //isControlAllowed
     isMultipleSharing: boolean = false;
+    isAllowCtlMic: boolean = true; //is allowed control mic in participant's list
+    isAllowCtlVideo: boolean = true; //is allowed control video in participant's list
     sharingUserName: string;
 
     ui: MeetingUI = new MeetingUI(this);
@@ -374,7 +376,6 @@ export class BizGazeMeeting {
         const deviceUsePolicy = this.getInitMediaPolicy();
         this.myInfo.mediaPolicy.useCamera = deviceUsePolicy.useCamera;
         this.myInfo.mediaPolicy.useMic = deviceUsePolicy.useMic;
-
         this.ui.updateByRole(this.myInfo.IsHost);
         this.ui.toolbar.updateByRole(this.myInfo.IsHost);
         this.ui.updateJoiningInfo();
@@ -513,7 +514,8 @@ export class BizGazeMeeting {
                 return Promise.resolve();
             }).catch((error: any) => {
                 this.ui.toolbar.update(this.myInfo, this.getLocalTracks());
-                if (!this.roomInfo.IsWebinar || this.myInfo.IsHost)
+                //if (!this.roomInfo.IsWebinar || this.myInfo.IsHost) //matvey
+                if (!this.roomInfo.IsControlAllowed || this.myInfo.IsHost)
                     this._updateMyPanel();
 
                 return Promise.resolve();
@@ -646,7 +648,8 @@ export class BizGazeMeeting {
         let useCamera = true;
         let useMic = true;
 
-        if (this.roomInfo.IsWebinar) {
+        //if (this.roomInfo.IsWebinar) //matvey
+        if ( this.roomInfo.IsControlAllowed) {
             if (!this.myInfo.IsHost) {
                 useCamera = false;
                 useMic = false;
@@ -843,10 +846,13 @@ export class BizGazeMeeting {
         //track mute
         this.jitsiRoom.on(this.JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
             (track: JitsiTrack) => {
-                if (track.isLocal())
+                if (track.isLocal()) {
                     this.onLocalTrackMuteChanged(track);
-                else 
+                }
+                else {
                     this.onRemoteTrackMuteChanged(track);
+                }
+                    
             });
 
         //audio level change
@@ -900,6 +906,9 @@ export class BizGazeMeeting {
         });
         this.jitsiRoom.addCommandListener(JitsiCommand.MUTE_AUDIO, (param: JitsiCommandParam) => {
             this.onMutedAudio(param)
+        });
+        this.jitsiRoom.addCommandListener(JitsiCommand.ALLOW_MIC, (param: JitsiCommandParam) => {
+            this.onAllowMic(param)
         });
         this.jitsiRoom.addCommandListener(JitsiCommand.MUTE_VIDEO, (param: JitsiCommandParam) => {
             this.onMutedVideo(param)
@@ -974,6 +983,8 @@ export class BizGazeMeeting {
                 this.jitsiRoom.myUserId(),
                 this.myInfo.Name,
                 true,
+                false,
+                false,
                 videoMute,
                 audioMute);
         }
@@ -1013,7 +1024,8 @@ export class BizGazeMeeting {
 
         //if track doesn't arrive for certain time
         //generate new panel for that user
-        if (!this.roomInfo.IsWebinar) {
+        //if (!this.roomInfo.IsWebinar) { //matvey
+        if ( !this.roomInfo.IsControlAllowed) {
             setTimeout(() => {
                 if (!user.getProperty(UserProperty.videoPanel)) {
                     const videoPanel = this.ui.videoPanelGrid.getNewVideoPanel();
@@ -1032,12 +1044,24 @@ export class BizGazeMeeting {
         });
         
         //add list
-        //if (this.myInfo.IsHost) 
-        {
+        if (this.myInfo.IsHost) {
             this.ui.addParticipant(
                 jitsiId,
                 user.getDisplayName(),
                 false, //me?
+                false,
+                false,
+                videoMute, //use camera?
+                audioMute  //use mic?
+            );
+        }
+        else {
+            this.ui.addParticipant(
+                jitsiId,
+                user.getDisplayName(),
+                false, //me?
+                true,
+                true,
                 videoMute, //use camera?
                 audioMute  //use mic?
             );
@@ -1046,7 +1070,6 @@ export class BizGazeMeeting {
         //notify him that i am moderator
         if (this.myInfo.IsHost)
             this.grantModeratorRole(this.jitsiRoom.myUserId());
-
         this.sendJitsiPrivateCommand(jitsiId, JitsiPrivateCommand.MEDIA_POLICY, this.myInfo.mediaPolicy);
 
         this.commandQueue.executeQueuedCommands(jitsiId);
@@ -1104,7 +1127,8 @@ export class BizGazeMeeting {
         }
         this.Log(`[ IN ] remote track - ${track.getType()}`);
 
-        if (this.roomInfo.IsWebinar && track.isMuted())
+        //if (this.roomInfo.IsWebinar && track.isMuted()) //matvey
+        if (this.roomInfo.IsControlAllowed && track.isMuted())
             return;
 
         //add to ui
@@ -1130,6 +1154,8 @@ export class BizGazeMeeting {
             const audioElem = videoPanel.audioElem as HTMLMediaElement;
             track.attach(audioElem);
             audioElem.play();
+            
+            
         }
 
         this._updateUserPanel(user);
@@ -1156,7 +1182,8 @@ export class BizGazeMeeting {
         if (!track.isLocal()) {
             const jitsiId = track.getParticipantId();
             const user = this.jitsiRoom.getParticipantById(jitsiId) as JitsiParticipant;
-            if (this.roomInfo.IsWebinar) {
+            //if (this.roomInfo.IsWebinar) { //matvey
+            if (this.roomInfo.IsControlAllowed) {
                 const IsHost = user.getProperty(UserProperty.IsHost);
                 const userVideoPanel = user.getProperty(UserProperty.videoPanel) as VideoPanel;
                 if (!IsHost && user.getTracks().length <= 0 && userVideoPanel) {
@@ -1180,7 +1207,8 @@ export class BizGazeMeeting {
 
     private _updateMyPanel() {
         if (this.localVideoPanel == null) {
-            if (this.roomInfo.IsWebinar && !this.myInfo.IsHost) {
+            //if (this.roomInfo.IsWebinar && !this.myInfo.IsHost) { //matvey
+            if (this.roomInfo.IsControlAllowed && !this.myInfo.IsHost) {
                 let isAllMuted = true;
                 this.getLocalTracks().forEach((track) => {
                     if (!track.isMuted()) isAllMuted = false;
@@ -1251,7 +1279,7 @@ export class BizGazeMeeting {
             this.onAllowHandRaise(senderId, allow);
         } else if (type === JitsiPrivateCommand.PRIVATE_CAHT) {
             this.onReceivePrivateChatMessage(senderId, message);
-        }
+        } 
     }
 
     /**
@@ -1342,6 +1370,7 @@ export class BizGazeMeeting {
     }
 
     onChangedModerator(param: JitsiCommandParam) {
+        
         this.Log("received grant host");
         const targetId = param.value;
         const senderName = param.attributes.senderName;
@@ -1427,6 +1456,13 @@ export class BizGazeMeeting {
         this.muteMyVideo(!videoMuted);
     }
 
+    public deniedunmuteMyAudio(targetId: string, mute: boolean) {
+        if (targetId !== this.myInfo.Jitsi_Id) {
+            this.sendJitsiBroadcastCommand(JitsiCommand.ALLOW_MIC, targetId, { mute: mute });
+        }
+        
+    }
+
     public muteMyAudio(mute: boolean) {
         console.log("muteMyAudio");
         this.getLocalTracks().forEach(track => {
@@ -1435,14 +1471,23 @@ export class BizGazeMeeting {
                 else track.unmute();
             }
         });
-        if (this.roomInfo.IsControlAllowed && mute)
+        if (this.roomInfo.IsControlAllowed && mute) {
+            if (!this.myInfo.IsHost) {
+                this.isAllowCtlMic = false;
+            }
+                
+            this.ui.updateByRole(this.isAllowCtlMic);
             this.ui.notification_warning("", "Your Mic is Muted", NotificationType.AudioMute);
-        else if (this.roomInfo.IsControlAllowed && (!mute))
+        }
+        else if (this.roomInfo.IsControlAllowed && (!mute)) {
+            this.isAllowCtlMic = true;
+            this.ui.updateByRole(this.isAllowCtlMic);
             this.ui.notification_warning("", "Your Mic is Unmuted", NotificationType.Audio);
+        }
         else if (!this.roomInfo.IsControlAllowed && (mute) && (! this.isToggleMuteMyAudio))
             this.ui.notification_warning("", "Host muted Your Mic", NotificationType.AudioMute);
-        else if (!this.roomInfo.IsControlAllowed && (!mute) && (! this.isToggleMuteMyAudio))
-            this.ui.notification_warning("", "Host Unmuted your Mic", NotificationType.Audio);
+        //else if (!this.roomInfo.IsControlAllowed && (!mute) && (! this.isToggleMuteMyAudio))
+        //    this.ui.notification_warning("", "Host Unmuted your Mic", NotificationType.Audio);
     }
     public muteMyVideo(mute: boolean) {
         this.getLocalTracks().forEach(track => {
@@ -1451,24 +1496,34 @@ export class BizGazeMeeting {
                 else track.unmute();
             }
         });
-        if (this.roomInfo.IsControlAllowed && mute)
+        if (this.roomInfo.IsControlAllowed && mute) {
+            if (!this.myInfo.IsHost) {
+                this.isAllowCtlVideo = false;
+            }
+            this.ui.updateByRole(this.isAllowCtlVideo);
             this.ui.notification_warning("", "Your Carmera is Disabled", NotificationType.VideoMute);
-        else if (this.roomInfo.IsControlAllowed && (!mute))
+        }
+        else if (this.roomInfo.IsControlAllowed && (!mute)) {
+            this.isAllowCtlMic = true;
+            this.ui.updateByRole(this.isAllowCtlMic);
             this.ui.notification_warning("", "Your Camera is Enabled", NotificationType.Video);
-        else if (!this.roomInfo.IsControlAllowed && (mute) && (! this.isToggleMuteMyAudio))
+        }
+        else if (!this.roomInfo.IsControlAllowed && (mute) && (!this.isToggleMuteMyVideo))
             this.ui.notification_warning("", "Host disabled your Camera", NotificationType.VideoMute);
-        else if (!this.roomInfo.IsControlAllowed && (!mute) && (!this.isToggleMuteMyAudio))
+        else if (!this.roomInfo.IsControlAllowed && (!mute) && (!this.isToggleMuteMyVideo))
             this.ui.notification_warning("", "Host enabled your Camera", NotificationType.Video);
     }
 
     //mute others
     public muteUserAudio(targetId: string, mute: boolean) {
         this.isToggleMuteMyAudio = false;
+
         if (targetId === this.myInfo.Jitsi_Id) {
             this.muteMyAudio(mute);
         }
         else 
             this.sendJitsiBroadcastCommand(JitsiCommand.MUTE_AUDIO, targetId, { mute: mute });
+
     }
 
     public muteUserVideo(targetId: string, mute: boolean) {
@@ -1477,6 +1532,12 @@ export class BizGazeMeeting {
             this.muteMyVideo(mute);
         else
             this.sendJitsiBroadcastCommand(JitsiCommand.MUTE_VIDEO, targetId, { mute: mute });
+    }
+
+    private onAllowMic(param: JitsiCommandParam) {
+        const senderName = param.attributes.senderName;
+        if (this.myInfo.IsHost)
+            this.ui.notification_warning("", "Your request is denied by " + senderName, NotificationType.AudioMute);
     }
 
     private onMutedAudio(param: JitsiCommandParam) {
@@ -1490,7 +1551,8 @@ export class BizGazeMeeting {
             
             if (senderId !== targetId) {
                 if (mute) {
-                    if (! this.roomInfo.IsControlAllowed) {
+                    /*
+                    if (!this.roomInfo.IsControlAllowed) {
                         this.ui.askDialog(
                             senderName,
                             "Requested to mute your microphone",
@@ -1499,18 +1561,18 @@ export class BizGazeMeeting {
                             null,
                             mute);
                     }
-                    else {
+                    else {*/
                         this.muteMyAudio(mute);
-                    }
+                    //}
                 }
                 else {
-                    if (!this.roomInfo.IsControlAllowed) {
+                    if (! this.roomInfo.IsControlAllowed) {
                         this.ui.askDialog(
                             senderName,
                             "Requested to unmute your microphone",
                             NotificationType.Audio,
                             this.muteMyAudio.bind(this),
-                            null,
+                            this.deniedunmuteMyAudio.bind(this),
                             mute);
                     }
                     else {
@@ -1569,7 +1631,8 @@ export class BizGazeMeeting {
     private onLocalTrackMuteChanged(track: JitsiTrack) {
         const id = track.getParticipantId();
 
-        if (this.roomInfo.IsWebinar && !this.myInfo.IsHost) {
+        //if (this.roomInfo.IsWebinar && !this.myInfo.IsHost) { //matvey
+        if (this.roomInfo.IsControlAllowed && !this.myInfo.IsHost) {
             let isAllMuted = true;
             this.getLocalTracks().forEach((t) => {
                 if (!t.isMuted()) isAllMuted = false;
@@ -1584,17 +1647,19 @@ export class BizGazeMeeting {
                 if (!this.localVideoPanel) {
                     this.localVideoPanel = this.ui.videoPanelGrid.getNewVideoPanel();
                 }
-
-                if (track.getType() === MediaType.VIDEO) {
-                    const videoElem = this.localVideoPanel.videoElem as HTMLMediaElement;
-                    track.attach(videoElem);
-                    videoElem.play();
-                }
-                else if (track.getType() === MediaType.AUDIO) {
-                    const audioElem = this.localVideoPanel.audioElem as HTMLMediaElement;
-                    track.attach(audioElem);
-                    audioElem.play();
-                }
+                //if (!this.roomInfo.IsControlAllowed) {
+                    if (track.getType() === MediaType.VIDEO) {
+                        const videoElem = this.localVideoPanel.videoElem as HTMLMediaElement;
+                        track.attach(videoElem);
+                        videoElem.play();
+                    }
+                    else if (track.getType() === MediaType.AUDIO) {
+                        const audioElem = this.localVideoPanel.audioElem as HTMLMediaElement;
+                        track.attach(audioElem);
+                        audioElem.play();
+                    }
+                //}
+                
             }
         }
 
@@ -1612,7 +1677,8 @@ export class BizGazeMeeting {
         const user = this.jitsiRoom.getParticipantById(id) as JitsiParticipant;
         if (!user) return;
 
-        if (this.roomInfo.IsWebinar) {
+        //if (this.roomInfo.IsWebinar) { //matvey
+        if (this.roomInfo.IsControlAllowed) {
             let isAllMuted = true;
             user.getTracks().forEach((t) => {
                 if (!t.isMuted()) isAllMuted = false;
@@ -1810,7 +1876,15 @@ export class BizGazeMeeting {
                         );
                     }
                     else {
-                        await this.turnOnScreenShare();
+                        //await this.turnOnScreenShare();
+                        this.sendJitsiBroadcastCommand(
+                            JitsiCommand.ASK_SCREENSHARE,
+                            this.myInfo.Jitsi_Id, null);
+                        this.ui.notification_warning(
+                            "Wait a second",
+                            "Sent your screen sharing request",
+                            NotificationType.Screensharing
+                        );
                     }
                 }
             }
@@ -1956,6 +2030,21 @@ export class BizGazeMeeting {
             this.ui.chattingWidget.receiveMessage(senderId, user.getDisplayName(), msg, true);
         }
     }
+    async onAllowControl(senderId: string, allow: true) {
+        const user = this.jitsiRoom.getParticipantById(senderId) as JitsiParticipant;
+        if (user) {
+            const userName = user.getDisplayName();
+            if (allow) {
+                
+            } else {
+                this.ui.notification_warning(
+                    userName,
+                    "Recording was denied",
+                    NotificationType.AudioMute);
+            }
+        }
+    }
+    
 
     /*file sharing*/
     sendFileMeta(meta: FileMeta) {

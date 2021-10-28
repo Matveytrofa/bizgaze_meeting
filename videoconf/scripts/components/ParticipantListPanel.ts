@@ -6,6 +6,8 @@ class ParticipantItemProps {
     jitsiId: string;
     name: string;
     me: boolean;
+    isMicDisable: boolean;
+    isVideoDisable: boolean;
     muteCamera: boolean;
     muteMic: boolean;
     onMuteCamera: (jitsiId: string, use:boolean) => {};
@@ -40,32 +42,62 @@ class ParticipantItem {
     }
 
     init() {
-        const body = `
-            <div class="jitsi-participant">
-                <div class="participant-avatar">
-                    <div class="avatar  userAvatar w-40px h-40px" style="background-color: rgba(234, 255, 128, 0.4);">
-                        <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <text dominant-baseline="central" fill="rgba(255,255,255,.6)" font-size="40pt" text-anchor="middle" x="50" y="50">?</text>
-                        </svg>
+        var body = '';
+        if (! this.props.isMicDisable) {
+            body = `
+                <div class="jitsi-participant">
+                    <div class="participant-avatar">
+                        <div class="avatar  userAvatar w-40px h-40px" style="background-color: rgba(234, 255, 128, 0.4);">
+                            <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <text dominant-baseline="central" fill="rgba(255,255,255,.6)" font-size="40pt" text-anchor="middle" x="50" y="50">?</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="participant-content">
+                        <span class="name" class="fs-2 fw-bolder">?</span>
+                        <span class="spacer"></span>
+                        <div class="jitsi-icon camera-toggle-button">
+                            <svg id="camera-disabled" width="20" height="20" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+                        </div>
+                        <div class="jitsi-icon mic-toggle-button">
+                            <svg id="mic-disabled" width="20" height="20" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-                <div class="participant-content">
-                    <span class="name" class="fs-2 fw-bolder">?</span>
-                    <span class="spacer"></span>
-                    <div class="jitsi-icon camera-toggle-button">
-                        <svg id="camera-disabled" width="20" height="20" viewBox="0 0 20 20">
-                            <path d=""></path>
-                        </svg>
+            `;
+        }
+        else {
+            body = `
+                <div class="jitsi-participant">
+                    <div class="participant-avatar">
+                        <div class="avatar  userAvatar w-40px h-40px" style="background-color: rgba(234, 255, 128, 0.4);">
+                            <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <text dominant-baseline="central" fill="rgba(255,255,255,.6)" font-size="40pt" text-anchor="middle" x="50" y="50">?</text>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="jitsi-icon mic-toggle-button">
-                        <svg id="mic-disabled" width="20" height="20" viewBox="0 0 20 20">
-                            <path d=""></path>
-                        </svg>
+                    <div class="participant-content">
+                        <span class="name" class="fs-2 fw-bolder">?</span>
+                        <span class="spacer"></span>
+                        <div class="jitsi-icon camera-toggle-button" style="pointer-events: none;">
+                            <svg id="camera-disabled" width="20" height="20" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+                        </div>
+                        <div class="jitsi-icon mic-toggle-button" style="pointer-events: none;">
+                            <svg id="mic-disabled" width="20" height="20" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-
+            `;
+        }
+        
         const $root = $(body);
         this.rootElement = $root[0];
 
@@ -210,7 +242,7 @@ export class ParticipantListWidget {
         });
     }
 
-    addParticipant(jitsiId: string, name: string, me: boolean, muteCamera: boolean, muteMic: boolean) {
+    addParticipant(jitsiId: string, name: string, me: boolean, isMicDisable: boolean, isVideoDiable: boolean, muteCamera: boolean, muteMic: boolean) {
         if (this.participantItemMap.has(jitsiId)) {
             this.removeParticipant(jitsiId);
         }
@@ -219,6 +251,8 @@ export class ParticipantListWidget {
         props.jitsiId = jitsiId;
         props.name = name;
         props.me = me;
+        props.isMicDisable = isMicDisable;
+        props.isVideoDisable = isVideoDiable;
         props.muteCamera = muteCamera;
         props.muteMic = muteMic;
         props.onMuteCamera = this.props.onMuteCamera;
@@ -230,7 +264,8 @@ export class ParticipantListWidget {
         this.participantItemMap.set(jitsiId, item);
         this.updateParticipantCount();
 
-        if (me) {
+        if (me && (isMicDisable || isVideoDiable)) {
+        //if (me) {
             $(this.participantListElement).prepend(item.element());
         } else {
             $(this.participantListElement).append(item.element());
@@ -268,7 +303,7 @@ export class ParticipantListWidget {
     }
 
     updateByRole(isHost: boolean) {
-        this.isHost = isHost;
+        this.isHost = isHost;  
 
         if (isHost)
             $(this.rootElement).addClass("is-host");

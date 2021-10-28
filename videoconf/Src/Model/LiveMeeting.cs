@@ -67,6 +67,7 @@ namespace BizGazeMeeting.Model
 		public bool IsControlAllowed
         {
 			get { return _meeting.IsControlAllowed; }
+			
 		}
 
 		public bool IsRecordingRequired

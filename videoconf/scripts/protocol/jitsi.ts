@@ -28,5 +28,6 @@ export enum JitsiPrivateCommand {
     ALLOW_RECORDING = "allow_recording",
     ALLOW_SCREENSHARE = "allow_screenshare",
     ALLOW_HANDRAISE = "allow_handraise",
+    
     PRIVATE_CAHT = "private_chat"
 }

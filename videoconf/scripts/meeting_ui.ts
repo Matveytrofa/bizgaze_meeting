@@ -138,13 +138,15 @@ export class MeetingUI {
     }
 
     updateByRole(isHost: boolean) {
+        
         const isWebinar = this.meeting.roomInfo.IsWebinar;
         /*if (isWebinar && !isHost)
             this.showParticipantListButton(false);
         else
             this.showParticipantListButton(true);*/
 
-        this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed);
+        //this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed); //commented by matvey
+        this.participantsListWidget.updateByRole(isHost); 
     }
 
     updateJoiningInfo() {
@@ -173,8 +175,8 @@ export class MeetingUI {
     }
 
     //add, remove participant to and from list
-    public addParticipant(jitsiId: string, name: string, me: boolean, muteCamera: boolean, muteMic: boolean) {
-        this.participantsListWidget.addParticipant(jitsiId, name, me, muteCamera, muteMic);
+    public addParticipant(jitsiId: string, name: string, me: boolean, isMicDisable: boolean, isVideoDisable: boolean, muteCamera: boolean, muteMic: boolean) {
+        this.participantsListWidget.addParticipant(jitsiId, name, me, isMicDisable, isVideoDisable, muteCamera, muteMic);
     }
 
     public removeParticipant(jitsiId: string) {
