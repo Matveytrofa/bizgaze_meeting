@@ -107,6 +107,7 @@ video {
     margin-bottom: auto;
     justify-content: center;
     text-align: center;
+    pointer-events: auto;
 }
 
 .row-1-3 {
@@ -285,25 +286,24 @@ button:focus {
 }
 
 .new-toolbox {
-    bottom: calc((48px * 2) * -1);
-    left: 0;
     position: absolute;
-    right: 0;
+    bottom: -100px;
     transition: bottom .3s ease-in;
     width: 100%;
-    position: fixed;
-    z-index: 10;
+    z-index: 3;
 }
 
     .new-toolbox.visible {
-        bottom: 0;
+        transition: bottom .3s ease-in;
+        bottom: 0px;
     }
 
 @media (min-width: 581px) {
+    /*
     .new-toolbox.shift-right {
         margin-left: 315px;
         width: calc(100% - 315px);
-    }
+    }*/
 
     #video-grid.shift-right {
         margin-left: 315px;
@@ -1059,7 +1059,8 @@ button:focus {
 }
 
 .subject.visible {
-    top: 0;
+    top: 0px;
+    pointer-events: none;
 }
 
 .subject {
@@ -1067,10 +1068,11 @@ button:focus {
     color: #fff;
     margin-top: 20px;
     position: absolute;
-    top: -120px;
+    top: -60px;
     transition: top .3s ease-in;
     width: 100%;
     z-index: 3;
+    pointer-events: none;
 }
 
 .subject-info-container {
@@ -1078,6 +1080,7 @@ button:focus {
     justify-content: center;
     max-width: calc(100% - 20px);
     margin: 0 auto;
+    pointer-events: none;
 }
 
 .subject-info {

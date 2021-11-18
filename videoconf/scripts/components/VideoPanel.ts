@@ -15,11 +15,12 @@ export class VideoPanelProps {
     muteMyAudio: (mute: boolean) => void;
     openPrivateChat: (jitsiId: string, name: string) => void;
     kickParticipantOut: (jistId: string) => void;
+    sendRemoteControlReply: (type: string, e: any, jistId: string) => void;
     panelClass: string;
     fullscreenClass: string;
     popupMenuClass: string;
 }
-
+const DISCO_REMOTE_CONTROL_FEATURE = 'http://jitsi.org/meet/remotecontrol';
 export class VideoPanel {
     panelClass: string;
     fullscreenClass: string;
@@ -50,6 +51,7 @@ export class VideoPanel {
     fullscreenMuteItem: HTMLElement;
     tileIcon: HTMLElement;
     kickParticipantMenuItem: HTMLElement;
+    remoteControlMenuItem: HTMLElement;
 
     static nPanelInstanceId: number = 0;//increased when add new, but not decreased when remove panel
     Id: number;
@@ -76,12 +78,13 @@ export class VideoPanel {
         this.videoMuteIconElem = $(`.${this.videoMuteClass}`, this.root)[0] as HTMLElement;
         this.moderatorIconElem = $(`.${this.moderatorClass}`, this.root)[0] as HTMLElement;
 
-        //menu items
+        //menu items 
         this.grantModeratorMenuItem = $(`li.grant-moderator`, this.root)[0] as HTMLElement;
         this.audioMuteMenuItem = $(`li.audio-mute`, this.root)[0] as HTMLElement;
         this.videoMuteMenuItem = $(`li.video-mute`, this.root)[0] as HTMLElement;
         this.fullscreenMuteItem = $(`li.fullscreen`, this.root)[0] as HTMLElement;
         this.kickParticipantMenuItem = $(`li.kick-participant`, this.root)[0] as HTMLElement;
+        this.remoteControlMenuItem = $(`li.remote-control`, this.root)[0] as HTMLElement;
         //this.attachHandlers();
     }
 
@@ -183,16 +186,29 @@ export class VideoPanel {
             this.audioMuteMenuItem.style.display = userHaveMicrophone ? "flex" : "none";
             this.grantModeratorMenuItem.style.display = "flex";
             this.kickParticipantMenuItem.style.display = "flex";
+            this.remoteControlMenuItem.style.display = "none";
+            jitsiUser.getFeatures()
+                .then(features => {
+                    /**/
+                    const b = features.has(DISCO_REMOTE_CONTROL_FEATURE);
+                    if (b) this.remoteControlMenuItem.style.display = "flex";
+                    
+                    console.log("-------------user:" + b);
+                    console.log(jitsiUser);
+                })
+            
         } else {
             this.videoMuteMenuItem.style.display = "none";
             this.audioMuteMenuItem.style.display = "none";
             this.grantModeratorMenuItem.style.display = "none";
             this.kickParticipantMenuItem.style.display = "none";
+            this.remoteControlMenuItem.style.display = "none";
         }
 
         if (jitsiUser.getProperty(UserProperty.IsHost)) {
             this.grantModeratorMenuItem.style.display = "none";
             this.kickParticipantMenuItem.style.display = "none";
+            this.remoteControlMenuItem.style.display = "none";
         }
             
 
@@ -233,6 +249,9 @@ export class VideoPanel {
             $(this.kickParticipantMenuItem).unbind('click').on('click', () => {
                 this.props.kickParticipantOut(jitsiUser.getId());
             });
+            $(this.remoteControlMenuItem).unbind('click').on('click', () => {
+                this.props.sendRemoteControlReply('permissions', {}, jitsiUser.getId());
+            });
         }
 
         //private chat handler
@@ -242,7 +261,101 @@ export class VideoPanel {
 
         //active speaker(blue border)
         $(this.root).removeClass(this.activeSpeakerClass);
+        const _this = this;
+        $(this.root).on('mousedown', function (e) {
+            //e.preventDefault();
+            e.stopPropagation();
+            if (e.which === 3) {
+                e.preventDefault();
+            }
+            let ae = {
+                button: e.button+1,
+                x: e.offsetX,
+                y: e.offsetY
+            };
+            _this.props.sendRemoteControlReply('mousedown', ae, jitsiUser.getId());
+        })
+        $(this.root).on('mouseup', function (e) {
+            //e.preventDefault();
+            e.stopPropagation();
+            if (e.which === 3)e.preventDefault();
+            
+            let ae = {
+                button: e.button+1,
+                x: e.offsetX,
+                y: e.offsetY
+            };
+            _this.props.sendRemoteControlReply('mouseup', ae, jitsiUser.getId());
+        })
+        var enableHandler: boolean = true;
+        $(this.root).on('mousemove', function (e) {
+                if (enableHandler) {
+                    e.stopPropagation();
+                    let ae = {
+                        button: e.button + 1,
+                        x: e.offsetX / this.offsetWidth,
+                        y: e.offsetY / this.offsetHeight
+                    };
+                    _this.props.sendRemoteControlReply('mousemove', ae, jitsiUser.getId());
+                    enableHandler = false;
+                }
+            }
+        )
+        var timer: number = window.setInterval(function () {
+            enableHandler = true;
+        }, 200);
+        $(window).unbind().on('keydown', function (e) {
+            
+            const modifiers = [];
+            if (e.shiftKey) {
+                modifiers.push('shift');
+            }
 
+            if (e.ctrlKey) {
+                modifiers.push('control');
+            }
+
+
+            if (e.altKey) {
+                modifiers.push('alt');
+            }
+
+            if (e.metaKey) {
+                modifiers.push('command');
+            }
+
+            let ae = {
+                modifiers: modifiers,
+                key:e.keyCode,
+            };
+            _this.props.sendRemoteControlReply('keydown', ae, jitsiUser.getId());
+        })
+        $(window).on('keyup', function (e) {
+
+            const modifiers = [];
+            if (e.shiftKey) {
+                modifiers.push('shift');
+            }
+
+            if (e.ctrlKey) {
+                modifiers.push('control');
+            }
+
+
+            if (e.altKey) {
+                modifiers.push('alt');
+            }
+
+            if (e.metaKey) {
+                modifiers.push('command');
+            }
+
+            let ae = {
+                modifiers: modifiers,
+                key: e.keyCode,
+            };
+            _this.props.sendRemoteControlReply('keyup', ae, jitsiUser.getId());
+        })
     }
 
     public updatePanelOnMyBGUser(myInfo: UserInfo, localTracks: JitsiTrack[]) {
@@ -279,6 +392,7 @@ export class VideoPanel {
 
         this.grantModeratorMenuItem.style.display = "none";
         this.kickParticipantMenuItem.style.display = "none";
+        this.remoteControlMenuItem.style.display = "none";
 
         //popup menu audio icon/label change
         if (this.audioMuteMenuItem.style.display === 'flex') {
@@ -322,7 +436,7 @@ export class VideoPanel {
 
     private create(): HTMLElement {
 
-        const videoTag = `<video autoplay playsinline  class='${this.videoElementClass}' id='remoteVideo_${this.Id}'></video>`;
+        const videoTag = `<video autoplay playsinline style='object-fit:cover; '  class='${this.videoElementClass}' id='remoteVideo_${this.Id}'></video>`;
         const audioTag = `<audio autoplay="" id="remoteAudio_${this.Id}"></audio>`;
         
         const avatarVisible = 'visible';
@@ -367,14 +481,18 @@ export class VideoPanel {
                             </div>';
 
         const panelHtml = `
-        <span class="${this.panelClass} display-video">
+        <span class="${this.panelClass} display-video" onContextMenu = "return false;">
+            
             ${videoTag} 
             ${audioTag}
+            
             <div class="videocontainer__toolbar">
                 <div> ${cameraStatus} ${micStatus} ${moderatorStatus}</div>
             </div>
             <div class="videocontainer__hoverOverlay"></div>
-            <div class="displayNameContainer"><span class="displayname" id="localDisplayName">Name</span></div>
+            <div class="displayNameContainer"><span class="displayname" id="localDisplayName">Name</span>
+            
+            </div>
             <div class="avatar-container ${avatarVisible}" style="height: 105.5px; width: 105.5px;">
                 <div class="avatar  userAvatar" style="background-color: rgba(234, 255, 128, 0.4); font-size: 180%; height: 100%; width: 100%;">
                     <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -453,6 +571,16 @@ export class VideoPanel {
                                 </div>
                             </span>
                             <span class="label overflow-menu-item-text">Kick out</span>
+                        </li>
+                        <li aria-label="" class="overflow-menu-item remote-control">
+                            <span class="overflow-menu-item-icon">
+                                <div class="jitsi-icon ">
+                                    <svg height="22" width="22" viewBox="0 0 22 28">
+                                        <path d="M21.625 14.484L.875 26.015c-.484.266-.875.031-.875-.516v-23c0-.547.391-.781.875-.516l20.75 11.531c.484.266.484.703 0 .969z"></path>
+                                    </svg>
+                                </div>
+                            </span>
+                            <span class="label overflow-menu-item-text">Remote Control</span>
                         </li>
                     </ul>
                 </div>

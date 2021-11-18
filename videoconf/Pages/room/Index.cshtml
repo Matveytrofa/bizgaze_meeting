@@ -15,6 +15,9 @@
     <link href="~/lib/bootstrap.min.css" rel="stylesheet" type="text/css">
         -->
     <style>
+        body {
+            overflow:hidden;
+        }
         menu {
             display: block;
         }
@@ -43,64 +46,64 @@
             font-family: -apple-system,BlinkMacSystemFont,open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
         }
 
-            .dropdown-menu.pull-right {
-                right: 0;
-                left: auto;
-            }
+        .dropdown-menu.pull-right {
+            right: 0;
+            left: auto;
+        }
 
-            .dropdown-menu .divider {
-                height: 1px;
-                margin: 9px 0;
-                overflow: hidden;
-                background-color: #3f3f3f;
-            }
+        .dropdown-menu .divider {
+            height: 1px;
+            margin: 9px 0;
+            overflow: hidden;
+            background-color: #3f3f3f;
+        }
 
-            .dropdown-menu > li > a svg {
-                color: #000;
-                fill: #fff;
-                margin-right: 10px;
-            }
+        .dropdown-menu > li > a svg {
+            color: #000;
+            fill: #fff;
+            margin-right: 10px;
+        }
 
-            .dropdown-menu > li > a {
-                display: block;
-                padding: 10px 10px;
-                clear: both;
-                font-weight: normal;
-                line-height: 1.42857143;
-                color: #333;
-                white-space: nowrap;
-            }
+        .dropdown-menu > li > a {
+            display: block;
+            padding: 10px 10px;
+            clear: both;
+            font-weight: normal;
+            line-height: 1.42857143;
+            color: #333;
+            white-space: nowrap;
+        }
 
-                .dropdown-menu > li > a:hover,
-                .dropdown-menu > li > a:focus {
-                    color: #262626;
-                    text-decoration: none;
-                    background-color: #f5f5f5;
-                }
+        .dropdown-menu > li > a:hover,
+        .dropdown-menu > li > a:focus {
+            color: #262626;
+            text-decoration: none;
+            background-color: #f5f5f5;
+        }
 
-            .dropdown-menu > .active > a,
-            .dropdown-menu > .active > a:hover,
-            .dropdown-menu > .active > a:focus {
-                color: #fff;
-                text-decoration: none;
-                background-color: #337ab7;
-                outline: 0;
-            }
+        .dropdown-menu > .active > a,
+        .dropdown-menu > .active > a:hover,
+        .dropdown-menu > .active > a:focus {
+            color: #fff;
+            text-decoration: none;
+            background-color: #337ab7;
+            outline: 0;
+        }
 
-            .dropdown-menu > .disabled > a,
-            .dropdown-menu > .disabled > a:hover,
-            .dropdown-menu > .disabled > a:focus {
-                color: #777;
-            }
+        .dropdown-menu > .disabled > a,
+        .dropdown-menu > .disabled > a:hover,
+        .dropdown-menu > .disabled > a:focus {
+            color: #777;
+        }
 
-                .dropdown-menu > .disabled > a:hover,
-                .dropdown-menu > .disabled > a:focus {
-                    text-decoration: none;
-                    cursor: not-allowed;
-                    background-color: transparent;
-                    background-image: none;
-                    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-                }
+        .dropdown-menu > .disabled > a:hover,
+        .dropdown-menu > .disabled > a:focus {
+            text-decoration: none;
+            cursor: not-allowed;
+            background-color: transparent;
+            background-image: none;
+            filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+        }
 
         .open > .dropdown-menu {
             display: block;
@@ -141,6 +144,8 @@
         /* width */
         ::-webkit-scrollbar {
             width: 7px !important;
+            /*display: none;*/
+            
         }
 
         /* Track */
@@ -163,11 +168,11 @@
             color: #f1f1f1;
         }
 
-            menu > li > a:focus, .dropdown-menu > li > a:hover {
-                color: #f1f1f1;
-                text-decoration: none;
-                background-color: #36383c;
-            }
+        menu > li > a:focus, .dropdown-menu > li > a:hover {
+            color: #f1f1f1;
+            text-decoration: none;
+            background-color: #36383c;
+        }
         ind-menu-item {
             height:40px;
         }
@@ -175,7 +180,13 @@
 }
 
 
-<div id="content" style="height: 100%; " class="d-flex">
+<div id="content" style="height: 100%; overflow:hidden !important; " class="d-flex">
+    
+    <div style="position: fixed; margin-left:20px; margin-top:10px;">
+        <img src="~/img/unimeet_logo_min.png" width="50" height="50">
+        <p> VERSION 1.2</p>
+    </div>
+    
     <div class="subject">
         <div class="subject-info-container">
             <div class="subject-info">
@@ -185,6 +196,9 @@
         </div>
     </div>
     <div id="video-grid" class="justify-content-center align-self-center"></div>
+
+
+
     <div class="sideToolbarContainer slideInExt invisible" id="sideToolbarContainer">
         <div class="chat-header">
             <div class="jitsi-icon chat-close-button">
@@ -554,12 +568,14 @@
         </a>
     </li>
         -->
-                            <li class="ind-menu-item">
-                                <a id="record" href="javascript:;">
-                                    <svg fill="none" height="22" width="22" viewBox="0 0 22 22"><path clip-rule="evenodd" d="M11 20.167a9.167 9.167 0 110-18.334 9.167 9.167 0 010 18.334zm0-1.834a7.333 7.333 0 100-14.666 7.333 7.333 0 000 14.666zM15.583 11a4.583 4.583 0 11-9.166 0 4.583 4.583 0 019.166 0z"></path></svg>
-                                    Start recording
-                                </a>
-                            </li>
+                            <!--
+    <li class="ind-menu-item">
+        <a id="record" href="javascript:;">
+            <svg fill="none" height="22" width="22" viewBox="0 0 22 22"><path clip-rule="evenodd" d="M11 20.167a9.167 9.167 0 110-18.334 9.167 9.167 0 010 18.334zm0-1.834a7.333 7.333 0 100-14.666 7.333 7.333 0 000 14.666zM15.583 11a4.583 4.583 0 11-9.166 0 4.583 4.583 0 019.166 0z"></path></svg>
+            Start recording
+        </a>
+    </li>
+    -->
                             <li class="ind-menu-item">
                                 <a id="muteall" href="javascript:;">
                                     <svg fill="none" height="22" width="22" viewBox="0 0 22 22"><path clip-rule="evenodd" d="M5.5 11.988v1.762c0 1.283.879 2.361 2.068 2.665a.694.694 0 00-.005.085v1.318a4.126 4.126 0 01-3.438-4.068.687.687 0 10-1.375 0c0 2.805 2.1 5.12 4.813 5.457v.73a.687.687 0 101.375 0v-.73c1-.124 1.917-.518 2.676-1.105l2.318 2.318a.699.699 0 10.988-.988l-2.318-2.318a.835.835 0 01.007-.01l-.983-.983-.007.01-.994-.994.007-.011-1.047-1.046-.003.014-2.707-2.707v-.018L5.5 9.995v.018L2.568 7.08a.699.699 0 10-.988.988l3.92 3.92zm1.375 1.375v.387a1.375 1.375 0 001.719 1.332l-1.719-1.719zm2.762 2.762a2.73 2.73 0 01-.705.29.694.694 0 01.005.085v1.318a4.103 4.103 0 001.694-.699l-.994-.994zM11 13.518l-1.375-1.375V9.625a1.375 1.375 0 00-2.733-.215L5.819 8.337A2.75 2.75 0 0111 9.625v3.893zm1.249 1.249l1.085 1.085a5.483 5.483 0 00.416-2.102.687.687 0 10-1.375 0c0 .35-.044.691-.126 1.017zM14.667 4.325V5.5c0 .856.586 1.574 1.378 1.776a.464.464 0 00-.003.057v.879A2.75 2.75 0 0113.75 5.5a.458.458 0 00-.917 0c0 1.87 1.4 3.413 3.209 3.638v.487a.458.458 0 00.916 0v-.487a3.648 3.648 0 001.784-.737l1.546 1.546a.466.466 0 10.659-.659L19.4 7.742a.284.284 0 00.005-.006l-.655-.656-.005.007-.663-.662.005-.008-.698-.697-.002.009-1.805-1.804v-.012l-.916-.917v.012l-1.955-1.955a.466.466 0 10-.659.659l2.614 2.613zm.916.917V5.5a.917.917 0 001.146.888l-1.146-1.146zm1.842 1.841c-.146.085-.303.15-.47.193a.464.464 0 01.003.057v.879c.416-.07.8-.232 1.13-.466l-.663-.663zm.908-1.738l-.916-.916V2.75a.917.917 0 00-1.823-.143l-.714-.715a1.833 1.833 0 013.453.858v2.595zm.833.833l.723.723c.179-.431.278-.905.278-1.401a.458.458 0 10-.917 0c0 .234-.03.461-.084.678z"></path></svg>
@@ -802,7 +818,9 @@
     <script src="~/lib/jquery.min.js" type="text/javascript"></script>
     <script src="~/lib/bootstrap.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        
+        var atoolbox = document.querySelector('.new-toolbox');
+        var asubject = document.querySelector('.subject');
+
     window.JitsiMeetJS = JitsiMeetJS;
 
     window._roomId = '@Model._meetingId';
@@ -812,7 +830,48 @@
     window._micId = '@Model._micId';
     window._speakerId = '@Model._speakerId';
     window._videoMute = '@Model._videoMute';
-    window._audioMute = '@Model._audioMute';
+        window._audioMute = '@Model._audioMute';
+
+        const downstate = 'downstate';
+        const upstate = 'upstate';
+        var curstate = upstate;
+        var wait_time = 3;
+
+        var timeoutval = wait_time;
+
+        window.addEventListener('mousemove', () => { motion_detector() });
+        function motion_detector() {
+            if (curstate == upstate) timeoutval = wait_time;
+            else if (curstate == downstate) {
+                curstate = upstate;
+                upstage();
+            }
+
+        }
+
+        function watcher() {
+            if (timeoutval == 0) {
+                downstage();
+            } else {
+                setTimeout(function () { watcher(); }, 1000);
+                timeoutval--;
+            }
+
+        }
+
+        function downstage() {
+            asubject.classList.remove("visible");
+            atoolbox.classList.remove("visible");
+            //curstate = downstate;
+            setTimeout(function () { curstate = downstate; }, 300);
+        }
+        function upstage() {
+            asubject.classList.add("visible");
+            atoolbox.classList.add("visible");
+            watcher();
+        }
+        watcher();
+        
     </script>
 
     <script src="~/lib/metronic/plugins/global/plugins.bundle.js"></script>

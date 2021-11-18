@@ -70,7 +70,7 @@ namespace BizGazeMeeting.Model
 		}
 
 		public bool IsRecordingRequired
-        {
+        {	
 			get { return _meeting.IsRecordingRequired; }
 		}
 

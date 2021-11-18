@@ -95,6 +95,11 @@ export class MeetingUI {
         const lProps = new ParticipantListPanelProps();
         lProps.onMuteCamera = this.meeting.muteUserVideo.bind(this.meeting);
         lProps.onMuteMic = this.meeting.muteUserAudio.bind(this.meeting);
+        lProps.onMuteAll = this.meeting.toggleMuteAll.bind(this.meeting);
+        lProps.givePermissionMic = this.meeting.givePermissionMic.bind(this.meeting);
+        lProps.setHostControlMic = this.meeting.setHostControlMic.bind(this.meeting);
+        lProps.setHostControlCamera = this.meeting.setHostControlCamera.bind(this.meeting);
+        lProps.givePermissionCamera = this.meeting.givePermissionCamera.bind(this.meeting);
         lProps.toggleCopyJoiningInfo = this.meeting.toggleCopyJoiningInfo.bind(this.meeting);
         this.participantsListWidget.init(lProps);
 
@@ -105,6 +110,7 @@ export class MeetingUI {
         const vProps = new VideoPanelGridProps();
         vProps.grantModeratorRole = this.meeting.grantModeratorRole.bind(this.meeting);
         vProps.kickParticipantOut = this.meeting.kickParticipantOut.bind(this.meeting);
+        vProps.sendRemoteControlReply = this.meeting.sendRemoteControlReply.bind(this.meeting);
         vProps.muteMyAudio = this.meeting.muteMyAudio.bind(this.meeting);
         vProps.muteMyVideo = this.meeting.muteMyVideo.bind(this.meeting);
         vProps.muteUserAudio = this.meeting.muteUserAudio.bind(this.meeting);
@@ -136,14 +142,40 @@ export class MeetingUI {
         });
     }
 
+    updatePermissionMic(permission: boolean) {
+        this.participantsListWidget.updatePermissionMic(permission);
+    }
+
+    updatePermissionCamera(permission: boolean) {
+        this.participantsListWidget.updatePermissionCamera(permission);
+    }
+
     updateByRole(isHost: boolean) {
+        
         const isWebinar = this.meeting.roomInfo.IsWebinar;
         /*if (isWebinar && !isHost)
             this.showParticipantListButton(false);
         else
             this.showParticipantListButton(true);*/
 
-        this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed);
+        //this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed); //commented by matvey
+        this.participantsListWidget.updateByRole(isHost); 
+    }
+
+    setIscontrolAllowed(isControl: boolean) {
+        this.participantsListWidget.setIscontrolAllowed(isControl);
+    }
+
+    setHost(setHost: boolean) {
+        this.participantsListWidget.setHost(setHost);
+    }
+
+    setIsHostControlSelfMic(isSetHostControlMic: boolean) {
+        this.participantsListWidget.setIsHostControlSelfMic(isSetHostControlMic);
+    }
+
+    setIsHostControlSelfCamera(isSetHostControlCamera: boolean) {
+        this.participantsListWidget.setIsHostControlSelfCamera(isSetHostControlCamera);
     }
 
     updateJoiningInfo() {
@@ -172,8 +204,8 @@ export class MeetingUI {
     }
 
     //add, remove participant to and from list
-    public addParticipant(jitsiId: string, name: string, me: boolean, muteCamera: boolean, muteMic: boolean) {
-        this.participantsListWidget.addParticipant(jitsiId, name, me, muteCamera, muteMic);
+    public addParticipant(jitsiId: string, name: string, me: boolean, isMicDisable: boolean, isVideoDisable: boolean, muteCamera: boolean, muteMic: boolean) {
+        this.participantsListWidget.addParticipant(jitsiId, name, me, isMicDisable, isVideoDisable, muteCamera, muteMic);
     }
 
     public removeParticipant(jitsiId: string) {
@@ -225,6 +257,7 @@ export class MeetingUI {
         allowCallback: Function, denyCallback: Function, param: any) {
         const props = new AskDialogProps();
         props.title = title;
+        
         props.message = message;
         props.icon = icon;
         props.isWarning = true;

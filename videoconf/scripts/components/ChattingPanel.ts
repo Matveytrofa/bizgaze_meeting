@@ -308,26 +308,26 @@ export class ChattingWidget {
     
 
     private idToEmoname(id: string) {
-        if (id == 'smiley1') return ':)';
-        if (id == 'smiley2') return ':(';
-        if (id == 'smiley3') return ':D';
-        if (id == 'smiley4') return ':+1:';
-        if (id == 'smiley5') return ':P';
-        if (id == 'smiley6') return ':wave:';
-        if (id == 'smiley7') return ':blush:';
-        if (id == 'smiley8') return ':slightly_smiling_face:';
-        if (id == 'smiley9') return ':scream:';
-        if (id == 'smiley10') return ':*';
-        if (id == 'smiley11') return ':-1:';
-        if (id == 'smiley12') return ':mag:';
-        if (id == 'smiley13') return ':heart:';
-        if (id == 'smiley14') return ':innocent:';
-        if (id == 'smiley15') return ':angry:';
-        if (id == 'smiley16') return ':angel:';
-        if (id == 'smiley17') return ';(';
-        if (id == 'smiley18') return ':clap:';
-        if (id == 'smiley19') return ';)';
-        if (id == 'smiley20') return ':beer:';
+        if (id == 'smiley1') return '😃';
+        if (id == 'smiley2') return '😦';
+        if (id == 'smiley3') return '😄';
+        if (id == 'smiley4') return '👍';
+        if (id == 'smiley5') return '😛';
+        if (id == 'smiley6') return '👋';
+        if (id == 'smiley7') return '😊';
+        if (id == 'smiley8') return '🙂';
+        if (id == 'smiley9') return '😱';
+        if (id == 'smiley10') return '😗';
+        if (id == 'smiley11') return '👎';
+        if (id == 'smiley12') return '🔍';
+        if (id == 'smiley13') return '❤️';
+        if (id == 'smiley14') return '😇';
+        if (id == 'smiley15') return '😠';
+        if (id == 'smiley16') return '👼';
+        if (id == 'smiley17') return '😭';
+        if (id == 'smiley18') return '👏';
+        if (id == 'smiley19') return '😉';
+        if (id == 'smiley20') return '🍺';
     }
 
     private emonameToEmoicon(sms: string) {
@@ -396,7 +396,7 @@ export class ChattingWidget {
         props.onFinished = this.props.onFileSendFinished;
         props.sendFileData = this.props.sendFileData;
         props.sendFileMeta = this.props.sendFileMeta;
-
+        //props.addChatItem = this.onSend.bind(this); //added matvey
         const fileSender = new FileSender(props);
         fileSender.sendFile();
     }
