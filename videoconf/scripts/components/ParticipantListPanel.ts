@@ -7,9 +7,12 @@ class ParticipantItemProps {
     name: string;
     me: boolean;
     isMicDisable: boolean;
+<<<<<<< HEAD
     isHostForPermission: boolean;
     isControl: boolean;
     isSetHost: boolean;
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     isVideoDisable: boolean;
     muteCamera: boolean;
     muteMic: boolean;
@@ -97,12 +100,20 @@ class ParticipantItem {
                     <div class="participant-content">
                         <span class="name" class="fs-2 fw-bolder">?</span>
                         <span class="spacer"></span>
+<<<<<<< HEAD
                         <div class="jitsi-icon camera-toggle-button" style="pointer-events: none; opacity: 30%;">
+=======
+                        <div class="jitsi-icon camera-toggle-button" style="pointer-events: none;">
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
                             <svg id="camera-disabled" width="20" height="20" viewBox="0 0 20 20">
                                 <path d=""></path>
                             </svg>
                         </div>
+<<<<<<< HEAD
                         <div class="jitsi-icon mic-toggle-button" style="pointer-events: none; opacity: 30%;">
+=======
+                        <div class="jitsi-icon mic-toggle-button" style="pointer-events: none;">
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
                             <svg id="mic-disabled" width="20" height="20" viewBox="0 0 20 20">
                                 <path d=""></path>
                             </svg>
@@ -111,6 +122,7 @@ class ParticipantItem {
                 </div>
             `;
         }
+<<<<<<< HEAD
 
         if (this.props.me && this.props.isControl && this.props.isSetHost) {
             body = `
@@ -139,6 +151,8 @@ class ParticipantItem {
                 </div>
             `;
         }
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         
         const $root = $(body);
         this.rootElement = $root[0];
@@ -401,9 +415,12 @@ export class ParticipantListWidget {
         props.name = name;
         props.me = me;
         props.isMicDisable = isMicDisable;
+<<<<<<< HEAD
         props.isHostForPermission = this.isHost;
         props.isControl = this.isControl;
         props.isSetHost = this.isSetHost;
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         props.isVideoDisable = isVideoDiable;
         props.muteCamera = muteCamera;
         props.muteMic = muteMic;
@@ -489,6 +506,7 @@ export class ParticipantListWidget {
         
     }
 
+<<<<<<< HEAD
     updatePermissionMic(permission: boolean) {
         this.isPermissionMic = permission;
         this.participantItemMap.forEach((participantItem, key) => {
@@ -504,6 +522,10 @@ export class ParticipantListWidget {
         });
         //alert("this.isPermissionMic3: " + this.isPermissionMic);
     }
+=======
+    updateByRole(isHost: boolean) {
+        this.isHost = isHost;  
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
 
     updateByRole(isHost: boolean) {
         this.isHost = isHost;  

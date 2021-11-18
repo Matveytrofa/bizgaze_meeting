@@ -160,6 +160,7 @@ export class MeetingUI {
 
         //this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed); //commented by matvey
         this.participantsListWidget.updateByRole(isHost); 
+<<<<<<< HEAD
     }
 
     setIscontrolAllowed(isControl: boolean) {
@@ -176,6 +177,8 @@ export class MeetingUI {
 
     setIsHostControlSelfCamera(isSetHostControlCamera: boolean) {
         this.participantsListWidget.setIsHostControlSelfCamera(isSetHostControlCamera);
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     }
 
     updateJoiningInfo() {

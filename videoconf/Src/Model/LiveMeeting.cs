@@ -77,10 +77,12 @@ namespace BizGazeMeeting.Model
 		public bool IsMultipleSharingAllowed
         {
 			get { return _meeting.IsMultipleSharingAllowed; }
+			//get { return false; }
 		}
 		public bool IsScreenShareRequired
         {
 			get { return _meeting.IsScreenShareRequired; }
+			//get { return true; }
 		}
 
 		public bool IsOpened

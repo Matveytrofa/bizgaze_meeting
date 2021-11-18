@@ -194,10 +194,17 @@ keyCodeToKey[229] = KEYS.SEMICOLON;
 for (let i = 0; i < 10; i++) {
     keyCodeToKey[i + 48] = `${i}`;
 }
+<<<<<<< HEAD
 
 for (let i = 0; i < 26; i++) {
     const keyCode = i + 65;
 
+=======
+
+for (let i = 0; i < 26; i++) {
+    const keyCode = i + 65;
+
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     keyCodeToKey[keyCode] = String.fromCharCode(keyCode).toLowerCase();
 }
 
@@ -227,6 +234,7 @@ export class BizGazeMeeting {
     isToggleMuteMyAudio: boolean = false; //isControlAllowed
     isToggleMuteMyVideo: boolean = false; //isControlAllowed
     isMultipleSharing: boolean = false;
+<<<<<<< HEAD
     isAllowCtlMic: boolean = false; //is allowed control mic in participant's list
     isAllowCtlVideo: boolean = false; //is allowed control video in participant's list
     isSendPermissionMic: boolean = false;
@@ -235,6 +243,12 @@ export class BizGazeMeeting {
     isSetHostControlCamera: boolean = false;
     sharingUserName: string;
     
+=======
+    isAllowCtlMic: boolean = true; //is allowed control mic in participant's list
+    isAllowCtlVideo: boolean = true; //is allowed control video in participant's list
+    sharingUserName: string;
+
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     ui: MeetingUI = new MeetingUI(this);
 
     roomInfo: BGMeetingInfo = new BGMeetingInfo();
@@ -249,6 +263,10 @@ export class BizGazeMeeting {
     jitsiConnection: any;
 
 
+<<<<<<< HEAD
+=======
+    //JitsiServerDomain = "idlests.com";
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     JitsiServerDomain = "unimail.in";
     //JitsiServerDomain = "meetserver.com";
 
@@ -381,6 +399,7 @@ export class BizGazeMeeting {
         const deviceUsePolicy = this.getInitMediaPolicy();
         this.myInfo.mediaPolicy.useCamera = deviceUsePolicy.useCamera;
         this.myInfo.mediaPolicy.useMic = deviceUsePolicy.useMic;
+<<<<<<< HEAD
         if (this.roomInfo.IsControlAllowed && this.myInfo.IsHost)
             this.ui.setHost(true);
         else
@@ -396,6 +415,9 @@ export class BizGazeMeeting {
             this.ui.setIscontrolAllowed(false);
         }
             
+=======
+        this.ui.updateByRole(this.myInfo.IsHost);
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         this.ui.toolbar.updateByRole(this.myInfo.IsHost);
         this.ui.updateJoiningInfo();
 
@@ -929,9 +951,12 @@ export class BizGazeMeeting {
         this.jitsiRoom.addCommandListener(JitsiCommand.ALLOW_MIC, (param: JitsiCommandParam) => {
             this.onAllowMic(param)
         });
+<<<<<<< HEAD
         this.jitsiRoom.addCommandListener(JitsiCommand.SET_HOSTCONTORLSELF_MIC, (param: JitsiCommandParam) => {
             this.onSetHostControlSelfMic(param);
         });
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         this.jitsiRoom.addCommandListener(JitsiCommand.ALLOW_VIDEO, (param: JitsiCommandParam) => {
             this.onAllowVideo(param)
         });
@@ -1070,6 +1095,8 @@ export class BizGazeMeeting {
         
         //add list
         if (this.myInfo.IsHost) {
+<<<<<<< HEAD
+=======
             this.ui.addParticipant(
                 jitsiId,
                 user.getDisplayName(),
@@ -1081,10 +1108,25 @@ export class BizGazeMeeting {
             );
         }
         else {
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
             this.ui.addParticipant(
                 jitsiId,
                 user.getDisplayName(),
                 false, //me?
+<<<<<<< HEAD
+                false,
+                false,
+                videoMute, //use camera?
+                audioMute  //use mic?
+            );
+        }
+        else {
+            this.ui.addParticipant(
+                jitsiId,
+                user.getDisplayName(),
+                false, //me?
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
                 true,
                 true,
                 videoMute, //use camera?
@@ -1304,6 +1346,7 @@ export class BizGazeMeeting {
             this.onAllowHandRaise(senderId, allow);
         } else if (type === JitsiPrivateCommand.PRIVATE_CAHT) {
             this.onReceivePrivateChatMessage(senderId, message);
+<<<<<<< HEAD
         } else if (type === JitsiPrivateCommand.SET_PERMISSION_MIC) {
             const permission = message.permission;
             this.onSetPermissionMic(senderId, permission);
@@ -1311,6 +1354,9 @@ export class BizGazeMeeting {
             const permission = message.permission;
             this.onSetPermissionCamera(senderId, permission);
         }
+=======
+        } 
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     }
 
     /**
@@ -1467,6 +1513,10 @@ export class BizGazeMeeting {
     /*    
         if (this.roomInfo.IsControlAllowed && !this.isAllowCtlMic)
             return;
+<<<<<<< HEAD
+=======
+        //alert("IsHost" + this.roomInfo.IsControlAllowed + "-" + "IsControlAllowed" + this.roomInfo.IsControlAllowed);
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         let audioMuted = false;
         this.getLocalTracks().forEach(track => {
             if (track.getType() === MediaType.AUDIO && track.isMuted()) audioMuted = true;
@@ -1556,7 +1606,23 @@ export class BizGazeMeeting {
             this.ui.notification_warning("", "Your Mic is Muted", NotificationType.AudioMute);
     }
 
+    public deniedunmuteMyAudio(targetId: string, mute: boolean) {
+        if (targetId !== this.myInfo.Jitsi_Id) {
+            this.sendJitsiBroadcastCommand(JitsiCommand.ALLOW_MIC, targetId, { mute: mute });
+        }
+    }
+
+    public deniedunmuteMyVideo(targetId: string, mute: boolean) {
+        if (targetId !== this.myInfo.Jitsi_Id) {
+            this.sendJitsiBroadcastCommand(JitsiCommand.ALLOW_VIDEO, targetId, { mute: mute });
+        }
+    }
+
     public muteMyAudio(mute: boolean) {
+<<<<<<< HEAD
+=======
+        console.log("muteMyAudio");
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         var fRole: boolean;
         this.getLocalTracks().forEach(track => {
             if (track.getType() === MediaType.AUDIO) {
@@ -1565,22 +1631,31 @@ export class BizGazeMeeting {
             }
         });
         if (this.roomInfo.IsControlAllowed && mute) {
+<<<<<<< HEAD
             /*if (!this.myInfo.IsHost) {
+=======
+            if (!this.myInfo.IsHost) {
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
                 this.isAllowCtlMic = false;
             }
             if (this.isAllowCtlMic == false && this.isAllowCtlVideo == false)
                 fRole = false;
             else
                 fRole = true;
+<<<<<<< HEAD
                 */
             if (!this.myInfo.IsHost)
                 this.ui.updateByRole(false);
             else
                 this.ui.updateByRole(true);
+=======
+            this.ui.updateByRole(fRole);
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
             this.ui.notification_warning("", "Your Mic is Muted", NotificationType.AudioMute);
         }
         else if (this.roomInfo.IsControlAllowed && (!mute)) {
             this.isAllowCtlMic = true;
+<<<<<<< HEAD
             //this.ui.updateByRole(this.isAllowCtlMic);
             //this.ui.updateByRole(true);
             if (!this.myInfo.IsHost)
@@ -1609,6 +1684,15 @@ export class BizGazeMeeting {
 
         if (!this.roomInfo.IsControlAllowed && mute && !this.isToggleMuteMyVideo && !this.myInfo.IsHost && !isHost)
             this.ui.notification_warning("", "your Camera is Disabled", NotificationType.VideoMute);
+=======
+            this.ui.updateByRole(this.isAllowCtlMic);
+            this.ui.notification_warning("", "Your Mic is Unmuted", NotificationType.Audio);
+        }
+        else if (!this.roomInfo.IsControlAllowed && (mute) && (! this.isToggleMuteMyAudio))
+            this.ui.notification_warning("", "Host muted Your Mic", NotificationType.AudioMute);
+        //else if (!this.roomInfo.IsControlAllowed && (!mute) && (! this.isToggleMuteMyAudio))
+        //    this.ui.notification_warning("", "Host Unmuted your Mic", NotificationType.Audio);
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     }
     public muteMyVideo(mute: boolean) {
         var fRole: boolean;
@@ -1619,7 +1703,10 @@ export class BizGazeMeeting {
             }
         });
         if (this.roomInfo.IsControlAllowed && mute) {
+<<<<<<< HEAD
             /*
+=======
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
             if (!this.myInfo.IsHost) {
                 this.isAllowCtlVideo = false;
             }
@@ -1627,16 +1714,21 @@ export class BizGazeMeeting {
                 fRole = false;
             else
                 fRole = true;
+<<<<<<< HEAD
                 */
             //this.ui.updateByRole(true);
             if (!this.myInfo.IsHost)
                 this.ui.updateByRole(false);
             else
                 this.ui.updateByRole(true);
+=======
+            this.ui.updateByRole(fRole);
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
             this.ui.notification_warning("", "Your Carmera is Disabled", NotificationType.VideoMute);
         }
         else if (this.roomInfo.IsControlAllowed && (!mute)) {
             this.isAllowCtlVideo = true;
+<<<<<<< HEAD
             if (!this.myInfo.IsHost)
                 this.ui.updateByRole(false);
             else
@@ -1731,6 +1823,32 @@ export class BizGazeMeeting {
     public muteUserVideo(targetId: string, mute: boolean, isHost: boolean) {
         this.isToggleMuteMyVideo = false;
         /*if (targetId === this.myInfo.Jitsi_Id)
+=======
+            this.ui.updateByRole(this.isAllowCtlVideo);
+            this.ui.notification_warning("", "Your Camera is Enabled", NotificationType.Video);
+        }
+        else if (!this.roomInfo.IsControlAllowed && (mute) && (!this.isToggleMuteMyVideo))
+            this.ui.notification_warning("", "Host disabled your Camera", NotificationType.VideoMute);
+        //else if (!this.roomInfo.IsControlAllowed && (!mute) && (!this.isToggleMuteMyVideo))
+        //    this.ui.notification_warning("", "Host enabled your Camera", NotificationType.Video);
+    }
+
+    //mute others
+    public muteUserAudio(targetId: string, mute: boolean) {
+        this.isToggleMuteMyAudio = false;
+
+        if (targetId === this.myInfo.Jitsi_Id) {
+            this.muteMyAudio(mute);
+        }
+        else 
+            this.sendJitsiBroadcastCommand(JitsiCommand.MUTE_AUDIO, targetId, { mute: mute });
+
+    }
+
+    public muteUserVideo(targetId: string, mute: boolean) {
+        this.isToggleMuteMyVideo = false;
+        if (targetId === this.myInfo.Jitsi_Id)
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
             this.muteMyVideo(mute);
         else
             this.sendJitsiBroadcastCommand(JitsiCommand.MUTE_VIDEO, targetId, { mute: mute });
@@ -1761,12 +1879,25 @@ export class BizGazeMeeting {
             this.ui.notification_warning("", "Your request is denied by " + senderName, NotificationType.AudioMute);
     }
 
+<<<<<<< HEAD
+=======
+    private onAllowMic(param: JitsiCommandParam) {
+        const senderName = param.attributes.senderName;
+        if (this.myInfo.IsHost)
+            this.ui.notification_warning("", "Your request is denied by " + senderName, NotificationType.AudioMute);
+    }
+
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     private onAllowVideo(param: JitsiCommandParam) {
         const senderName = param.attributes.senderName;
         if (this.myInfo.IsHost)
             this.ui.notification_warning("", "Your request is denied by " + senderName, NotificationType.VideoMute);
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     private onMutedAudio(param: JitsiCommandParam) {
         this.isToggleMuteMyAudio = false;
         const targetId = param.value;
@@ -2104,6 +2235,7 @@ export class BizGazeMeeting {
                         );
                     }
                     else {
+<<<<<<< HEAD
                         if (this.roomInfo.IsScreenShareRequired) {
                             //await this.turnOnScreenShare();
                             this.sendJitsiBroadcastCommand(
@@ -2119,6 +2251,17 @@ export class BizGazeMeeting {
                             await this.turnOnScreenShare();
                         }
                         
+=======
+                        //await this.turnOnScreenShare();
+                        this.sendJitsiBroadcastCommand(
+                            JitsiCommand.ASK_SCREENSHARE,
+                            this.myInfo.Jitsi_Id, null);
+                        this.ui.notification_warning(
+                            "Wait a second",
+                            "Sent your screen sharing request",
+                            NotificationType.Screensharing
+                        );
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
                     }
                 }
             }
@@ -2410,11 +2553,18 @@ export class BizGazeMeeting {
     async startRecording() {
         let gumStream: MediaStream = null;
         let gdmStream: MediaStream = null;
+<<<<<<< HEAD
         
+=======
+
+        //debugger;
+
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         try {
             
             debugger;
             gumStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+<<<<<<< HEAD
             
             //gdmStream.getTracks().forEach(track => track.stop());
             
@@ -2424,7 +2574,15 @@ export class BizGazeMeeting {
                     audio: { channelCount: 2 },
                 });
 
+=======
+            gdmStream = await navigator.mediaDevices.getDisplayMedia(
+                {
+                    video: { displaySurface: "browser" },
+                    audio: { channelCount: 2 },
+                });
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
             gdmStream.addEventListener('inactive', (event) => {
+            
                 if (this.recording)
                     this.toggleRecording();
             });
@@ -2560,13 +2718,13 @@ export class BizGazeMeeting {
         }
     }
     public async toggleMuteAll() {
-
         if (!this.myInfo.IsHost)
             return;
 
         this.sendJitsiBroadcastCommand(
             JitsiCommand.MUTE_All_AUDIO,
             this.myInfo.Jitsi_Id, { mute: true });
+<<<<<<< HEAD
         /*
         if (this.roomInfo.IsControlAllowed)
             this.ui.notification_warning(
@@ -2575,6 +2733,13 @@ export class BizGazeMeeting {
                 NotificationType.AudioMute
             );
             */
+=======
+        this.ui.notification_warning(
+            "Wait a second",
+            "Sent your mute all request",
+            NotificationType.AudioMute
+        );
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
     }
 
     onMuteAllAudio(param: JitsiCommandParam) {
@@ -2583,6 +2748,7 @@ export class BizGazeMeeting {
         const mute = param.attributes.mute;
         
         if (senderId !== this.myInfo.Jitsi_Id) {
+<<<<<<< HEAD
             /*
             if (this.roomInfo.IsControlAllowed)
                 this.ui.askDialog(
@@ -2595,6 +2761,16 @@ export class BizGazeMeeting {
             else
             */
             this.muteMyAudio(mute);
+=======
+
+            this.ui.askDialog(
+                senderName,
+                "Requested to mute your microphone",
+                NotificationType.AudioMute,
+                this.muteMyAudio.bind(this),
+                null,
+                mute);
+>>>>>>> 0f59794c7dbe9da3d32dbae6ac1249734ffc81fd
         }
     }
     // handraise
