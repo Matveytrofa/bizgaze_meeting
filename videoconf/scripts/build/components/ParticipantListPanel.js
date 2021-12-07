@@ -18,14 +18,14 @@ var ParticipantItem = /** @class */ (function () {
     ParticipantItem.prototype.init = function () {
         var _this = this;
         var body = '';
-        if (!this.props.isMicDisable) {
+        if (this.props.me && this.props.isControl && this.props.isSetHost) {
+            body = "\n                <div class=\"jitsi-participant\">\n                    <div class=\"participant-avatar\">\n                        <div class=\"avatar  userAvatar w-40px h-40px\" style=\"background-color: rgba(234, 255, 128, 0.4);\">\n                            <svg class=\"avatar-svg\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n                                <text dominant-baseline=\"central\" fill=\"rgba(255,255,255,.6)\" font-size=\"40pt\" text-anchor=\"middle\" x=\"50\" y=\"50\">?</text>\n                            </svg>\n                        </div>\n                    </div>\n                    <div class=\"participant-content\">\n                        <span class=\"name\" class=\"fs-2 fw-bolder\">?</span>\n                        <span class=\"spacer\"></span>\n                        <div class=\"jitsi-icon camera-toggle-button cameraowner\">\n                            <svg id=\"camera-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                        <div class=\"jitsi-icon mic-toggle-button micowner\">\n                            <svg id=\"mic-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                    </div>\n                </div>\n            ";
+        }
+        else if (!this.props.isMicDisable) {
             body = "\n                <div class=\"jitsi-participant\">\n                    <div class=\"participant-avatar\">\n                        <div class=\"avatar  userAvatar w-40px h-40px\" style=\"background-color: rgba(234, 255, 128, 0.4);\">\n                            <svg class=\"avatar-svg\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n                                <text dominant-baseline=\"central\" fill=\"rgba(255,255,255,.6)\" font-size=\"40pt\" text-anchor=\"middle\" x=\"50\" y=\"50\">?</text>\n                            </svg>\n                        </div>\n                    </div>\n                    <div class=\"participant-content\">\n                        <span class=\"name\" class=\"fs-2 fw-bolder\">?</span>\n                        <span class=\"spacer\"></span>\n                        <div class=\"jitsi-icon camera-toggle-button\">\n                            <svg id=\"camera-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                        <div class=\"jitsi-icon mic-toggle-button\">\n                            <svg id=\"mic-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                    </div>\n                </div>\n            ";
         }
         else {
             body = "\n                <div class=\"jitsi-participant\">\n                    <div class=\"participant-avatar\">\n                        <div class=\"avatar  userAvatar w-40px h-40px\" style=\"background-color: rgba(234, 255, 128, 0.4);\">\n                            <svg class=\"avatar-svg\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n                                <text dominant-baseline=\"central\" fill=\"rgba(255,255,255,.6)\" font-size=\"40pt\" text-anchor=\"middle\" x=\"50\" y=\"50\">?</text>\n                            </svg>\n                        </div>\n                    </div>\n                    <div class=\"participant-content\">\n                        <span class=\"name\" class=\"fs-2 fw-bolder\">?</span>\n                        <span class=\"spacer\"></span>\n                        <div class=\"jitsi-icon camera-toggle-button\" style=\"pointer-events: none; opacity: 30%;\">\n                            <svg id=\"camera-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                        <div class=\"jitsi-icon mic-toggle-button\" style=\"pointer-events: none; opacity: 30%;\">\n                            <svg id=\"mic-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                    </div>\n                </div>\n            ";
-        }
-        if (this.props.me && this.props.isControl && this.props.isSetHost) {
-            body = "\n                <div class=\"jitsi-participant\">\n                    <div class=\"participant-avatar\">\n                        <div class=\"avatar  userAvatar w-40px h-40px\" style=\"background-color: rgba(234, 255, 128, 0.4);\">\n                            <svg class=\"avatar-svg\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n                                <text dominant-baseline=\"central\" fill=\"rgba(255,255,255,.6)\" font-size=\"40pt\" text-anchor=\"middle\" x=\"50\" y=\"50\">?</text>\n                            </svg>\n                        </div>\n                    </div>\n                    <div class=\"participant-content\">\n                        <span class=\"name\" class=\"fs-2 fw-bolder\">?</span>\n                        <span class=\"spacer\"></span>\n                        <div class=\"jitsi-icon camera-toggle-button cameraowner\">\n                            <svg id=\"camera-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                        <div class=\"jitsi-icon mic-toggle-button micowner\">\n                            <svg id=\"mic-disabled\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\">\n                                <path d=\"\"></path>\n                            </svg>\n                        </div>\n                    </div>\n                </div>\n            ";
         }
         var $root = $(body);
         this.rootElement = $root[0];
@@ -142,11 +142,23 @@ var ParticipantItem = /** @class */ (function () {
     ParticipantItem.prototype.setPermissionCamera = function (permisssion) {
         this.isPermissionCamera = permisssion;
     };
+    ParticipantItem.prototype.updateIconsByHandRaise = function () {
+        var videoIcon = vector_icon_1.VectorIcon.VIDEO_UNMUTE_ICON;
+        var micIcon = vector_icon_1.VectorIcon.AUDIO_UNMUTE_ICON;
+        $(this.cameraIconElement).attr("d", videoIcon);
+        var cameraColor = "#09eb1a78";
+        $(this.cameraButtonElement).css("background-color", cameraColor);
+        $(this.cameraButtonElement).css("border-radius", "20%");
+        $(this.micIconElement).attr("d", micIcon);
+        var micColor = "#09eb1a78";
+        $(this.micButtonElement).css("background-color", micColor);
+        $(this.micButtonElement).css("border-radius", "20%");
+    };
     ParticipantItem.prototype.updateCameraIcon = function () {
         if (this.props.isHostForPermission && this.props.isControl && !this.props.me) {
             var icon = vector_icon_1.VectorIcon.VIDEO_UNMUTE_ICON;
             $(this.cameraIconElement).attr("d", icon);
-            var color = this.muteCamera ? "#eb1717a6" : "#09eb1a78";
+            var color = this.muteCamera ? "#eb1717a6" : "#09eb1a78"; //eb1717a6-red
             $(this.cameraButtonElement).css("background-color", color);
             $(this.cameraButtonElement).css("border-radius", "20%");
         }

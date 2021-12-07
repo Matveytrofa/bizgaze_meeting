@@ -57,7 +57,36 @@ class ParticipantItem {
 
     init() {
         var body = '';
-        if (! this.props.isMicDisable) {
+        if (this.props.me && this.props.isControl && this.props.isSetHost) {
+            
+            body = `
+                <div class="jitsi-participant">
+                    <div class="participant-avatar">
+                        <div class="avatar  userAvatar w-40px h-40px" style="background-color: rgba(234, 255, 128, 0.4);">
+                            <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <text dominant-baseline="central" fill="rgba(255,255,255,.6)" font-size="40pt" text-anchor="middle" x="50" y="50">?</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="participant-content">
+                        <span class="name" class="fs-2 fw-bolder">?</span>
+                        <span class="spacer"></span>
+                        <div class="jitsi-icon camera-toggle-button cameraowner">
+                            <svg id="camera-disabled" width="20" height="20" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+                        </div>
+                        <div class="jitsi-icon mic-toggle-button micowner">
+                            <svg id="mic-disabled" width="20" height="20" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        else if (!this.props.isMicDisable) {
+            
             body = `
                 <div class="jitsi-participant">
                     <div class="participant-avatar">
@@ -85,6 +114,7 @@ class ParticipantItem {
             `;
         }
         else {
+            
             body = `
                 <div class="jitsi-participant">
                     <div class="participant-avatar">
@@ -112,33 +142,7 @@ class ParticipantItem {
             `;
         }
 
-        if (this.props.me && this.props.isControl && this.props.isSetHost) {
-            body = `
-                <div class="jitsi-participant">
-                    <div class="participant-avatar">
-                        <div class="avatar  userAvatar w-40px h-40px" style="background-color: rgba(234, 255, 128, 0.4);">
-                            <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <text dominant-baseline="central" fill="rgba(255,255,255,.6)" font-size="40pt" text-anchor="middle" x="50" y="50">?</text>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="participant-content">
-                        <span class="name" class="fs-2 fw-bolder">?</span>
-                        <span class="spacer"></span>
-                        <div class="jitsi-icon camera-toggle-button cameraowner">
-                            <svg id="camera-disabled" width="20" height="20" viewBox="0 0 20 20">
-                                <path d=""></path>
-                            </svg>
-                        </div>
-                        <div class="jitsi-icon mic-toggle-button micowner">
-                            <svg id="mic-disabled" width="20" height="20" viewBox="0 0 20 20">
-                                <path d=""></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+        
         
         const $root = $(body);
         this.rootElement = $root[0];
@@ -275,12 +279,29 @@ class ParticipantItem {
         this.isPermissionCamera = permisssion;
     }
 
+    updateIconsByHandRaise() {
+        const videoIcon = VectorIcon.VIDEO_UNMUTE_ICON;
+        const micIcon = VectorIcon.AUDIO_UNMUTE_ICON;
+        $(this.cameraIconElement).attr("d", videoIcon);
+
+        const cameraColor = "#09eb1a78";
+        $(this.cameraButtonElement).css("background-color", cameraColor);
+        $(this.cameraButtonElement).css("border-radius", "20%");
+
+        
+        $(this.micIconElement).attr("d", micIcon);
+
+        const micColor = "#09eb1a78";
+        $(this.micButtonElement).css("background-color", micColor);
+        $(this.micButtonElement).css("border-radius", "20%");
+    }
+
     updateCameraIcon() {
         if (this.props.isHostForPermission && this.props.isControl && !this.props.me) {
             const icon = VectorIcon.VIDEO_UNMUTE_ICON;
             $(this.cameraIconElement).attr("d", icon);
 
-            const color = this.muteCamera ? "#eb1717a6" : "#09eb1a78";
+            const color = this.muteCamera ? "#eb1717a6" : "#09eb1a78"; //eb1717a6-red
             $(this.cameraButtonElement).css("background-color", color);
             $(this.cameraButtonElement).css("border-radius", "20%");
         }
@@ -436,7 +457,7 @@ export class ParticipantListWidget {
     removeParticipant(jitsiId: string) {
         if (!this.participantItemMap.has(jitsiId))
             return;
-
+        
         this.participantItemMap.get(jitsiId).removeSelf();
         this.participantItemMap.delete(jitsiId);
         this.updateParticipantCount();
@@ -532,4 +553,10 @@ export class ParticipantListWidget {
     setIsHostControlSelfCamera(isSetHostControlSelfCamera: boolean) {
         this.isSetHostControlSelfCamera = isSetHostControlSelfCamera;
     }
+    /*
+    setBlueMicIconByHandRaise(senerId: string, isHandRaise: boolean) {
+        const item = this.participantItemMap.get(senerId);
+        item.updateIconsByHandRaise();
+    }
+    */
 }

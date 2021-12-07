@@ -23,6 +23,7 @@ var JitsiCommand;
     JitsiCommand["MUTE_All_AUDIO"] = "mute_all_audio";
     JitsiCommand["MUTE_All_VIDEO"] = "mute_all_video";
     JitsiCommand["SET_HOSTCONTORLSELF_MIC"] = "set_hostcontrolself_mic";
+    JitsiCommand["END_ALL_MEETING"] = "end_all_meeting";
 })(JitsiCommand = exports.JitsiCommand || (exports.JitsiCommand = {}));
 ;
 var JitsiPrivateCommand;

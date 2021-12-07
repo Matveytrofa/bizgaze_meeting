@@ -104,7 +104,7 @@ namespace BizGazeMeeting.Model
 		public Client JoinClient(Int64 userId, string anonymousUserName, string connectionId)
 		{
 			Client client = null;
-
+			
 			if (userId == 0)
             {
 				if (IsWebinar())

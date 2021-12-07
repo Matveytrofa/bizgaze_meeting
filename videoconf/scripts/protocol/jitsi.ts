@@ -22,6 +22,7 @@ export enum JitsiCommand {
     MUTE_All_AUDIO = "mute_all_audio",
     MUTE_All_VIDEO = "mute_all_video",
     SET_HOSTCONTORLSELF_MIC = "set_hostcontrolself_mic",
+    END_ALL_MEETING = "end_all_meeting",
 };
 
 

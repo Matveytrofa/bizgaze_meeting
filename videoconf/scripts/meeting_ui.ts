@@ -161,7 +161,11 @@ export class MeetingUI {
         //this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed); //commented by matvey
         this.participantsListWidget.updateByRole(isHost); 
     }
-
+    /*
+    setBlueMicIconByHandRaise(senderId: string, isHandRaise: boolean) {
+        this.participantsListWidget.setBlueMicIconByHandRaise(senderId, isHandRaise);
+    }
+    */
     setIscontrolAllowed(isControl: boolean) {
         this.participantsListWidget.setIscontrolAllowed(isControl);
     }

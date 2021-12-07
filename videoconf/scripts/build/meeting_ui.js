@@ -130,6 +130,11 @@ var MeetingUI = /** @class */ (function () {
         //this.participantsListWidget.updateByRole(isHost && this.meeting.roomInfo.IsControlAllowed); //commented by matvey
         this.participantsListWidget.updateByRole(isHost);
     };
+    /*
+    setBlueMicIconByHandRaise(senderId: string, isHandRaise: boolean) {
+        this.participantsListWidget.setBlueMicIconByHandRaise(senderId, isHandRaise);
+    }
+    */
     MeetingUI.prototype.setIscontrolAllowed = function (isControl) {
         this.participantsListWidget.setIscontrolAllowed(isControl);
     };
